@@ -44,12 +44,18 @@ class Ad(models.Model):
         return self.url
 
     def view(self, from_ip):
+        """ method called when the ad is shown on a webpage
+            from_ip should be valid ip string ie. '127.0.0.1'
+        """
         adview = AdView.objects.create(
                 ad=self,
                 view_date=datenow(),
                 view_ip=from_ip)
 
     def click(self, from_ip):
+        """ method called when the ad is clicked
+            from_ip should be valid ip string ie. '127.0.0.1'
+        """
         adclick = AdClick.objects.create(
                 ad=self,
                 click_date=datenow(),
