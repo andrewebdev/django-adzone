@@ -26,6 +26,16 @@ class Advertiser(models.Model):
     def get_website_url(self):
         return "%s" % self.website
 
+class AdCategory(models.Model):
+    """ a Model to hold the different Categories for adverts
+    """
+    title = models.CharField(max_length=255)
+    slug = models.SlugField(unique=True)
+    description = models.TextField()
+
+    def __unicode__(self):
+        return "%s" % self.title
+
 class Ad(models.Model):
     """ Our basic Advert Model
     """
@@ -36,6 +46,7 @@ class Ad(models.Model):
     since = models.DateTimeField(default=datenow())
     updated = models.DateTimeField()
     advertiser = models.ForeignKey(Advertiser)
+    category = models.ForeignKey(AdCategory)
 
     def __unicode__(self):
         return "%s" % self.title
