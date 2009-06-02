@@ -35,9 +35,42 @@ class Ad(models.Model):
     enabled = models.BooleanField(default=False)
     since = models.DateTimeField(default=datenow())
     updated = models.DateTimeField()
+    advertiser = models.ForeignKey(Advertiser)
 
     def __unicode__(self):
         return "%s" % self.title
 
     def get_ad_url(self):
         return self.url
+
+    def view(self, from_ip):
+        adview = AdView.objects.create(
+                ad=self,
+                view_date=datenow(),
+                view_ip=from_ip)
+
+    def click(self, from_ip):
+        adclick = AdClick.objects.create(
+                ad=self,
+                click_date=datenow(),
+                click_ip=from_ip)
+
+class AdView(models.Model):
+    """ The AdView Model will record every view that the ad has
+    """
+    ad = models.ForeignKey(Ad)
+    view_date = models.DateTimeField(default=datenow())
+    view_ip = models.IPAddressField()
+
+    def __unicode__(self):
+        return "%s" % self.ad
+
+class AdClick(models.Model):
+    """ The AdClick model will record every click that a add gets
+    """
+    ad = models.ForeignKey(Ad)
+    click_date = models.DateTimeField(default=datenow())
+    click_ip = models.IPAddressField()
+
+    def __unicode__(self):
+        return "%s" % self.ad
