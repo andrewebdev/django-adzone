@@ -6,24 +6,38 @@
 # If this script is distributed, it must be accompanied by the Licence
 
 from django.db import models
+from django.contrib.auth.models import User
 
-def datetimenow():
+def datenow():
     """Just s quick function to return the current date and time"""
     from datetime import datetime
-    return datetime.datetime.now()
+    return datetime.now()
+
+class Advertiser(models.Model):
+    """ A Model for our Advertiser
+    """
+    company_name = models.CharField(max_length=255)
+    website = models.URLField(verify_exists=True)
+    user = models.ForeignKey(User)
+
+    def __unicode__(self):
+        return "%s" % self.company_name
+
+    def get_website_url(self):
+        return "%s" % self.website
 
 class Ad(models.Model):
-    """ Our standard Ad Model
+    """ Our basic Advert Model
     """
-    title = models.CharField(max_length=255,
-            help_text='A short title for the ad')
-    content = models.TextField(
-            help_text='The text based content for the ad')
-    url = models.URLField(verify_exists=True,
-            help_text='The url to which the advert points')
-    advertiser = models.ForeignKey('Advertiser')
-    words = models.TextField(
-            help_text='a couple of words to describe the advert')
+    title = models.CharField(max_length=255)
+    content = models.TextField()
+    url = models.URLField(verify_exists=True)
     enabled = models.BooleanField(default=False)
-    since = models.DateTimeField(default=datetimenow())
+    since = models.DateTimeField(default=datenow())
     updated = models.DateTimeField()
+
+    def __unicode__(self):
+        return "%s" % self.title
+
+    def get_ad_url(self):
+        return self.url
