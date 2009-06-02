@@ -48,8 +48,10 @@ class AdvertiserTestCase(TestCase):
         self.assertEquals(self.ad.get_ad_url(), 'http://www.teh-node.co.za/')
         self.ad.view('222.0.3.45')
         self.assertEquals(len(self.ad.adview_set.all()), 3)
+        self.assertEquals(self.ad.adview_set.all()[2].view_ip, '222.0.3.45')
         self.ad.click('222.0.3.45')
         self.assertEquals(len(self.ad.adclick_set.all()), 2)
+        self.assertEquals(self.ad.adclick_set.all()[1].click_ip, '222.0.3.45')
 
     def testAdView(self):
         self.assertEquals(self.adview1.__unicode__(), 'Professional Web Design and Development')
