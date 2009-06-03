@@ -21,15 +21,25 @@ class AdvertingTestCase(TestCase):
                 slug = 'internet-services',
                 description = 'All internet based services')
 
+        self.category2 = AdCategory.objects.create(
+                title = 'Category Two',
+                slug = 'categorytwo',
+                description = 'A Second Category')
+
         # Zones setup
         self.adzone = AdZone.objects.create(
                 title = 'Sidebar',
                 slug = 'sidebar',
                 description = 'Side Bar Ads')
 
+        self.adzone2 = AdZone.objects.create(
+                title = 'Content Banner',
+                slug = 'contentbanner',
+                description = 'Content Adverts')
+
         # Ad setup
         self.ad = Ad.objects.create(
-                title = 'Professional Web Design and Development',
+                title = 'First Ad',
                 content = 'For all your web design and development needs, at competitive rates.',
                 url = 'http://www.teh-node.co.za/',
                 enabled = True,
@@ -39,7 +49,29 @@ class AdvertingTestCase(TestCase):
                 category = self.category,
                 zone = self.adzone)
 
-        # Views Setup
+        self.ad2= Ad.objects.create(
+                title = 'Second Ad',
+                content = 'A second advert.',
+                url = 'http://www.teh-node.co.za/',
+                enabled = True,
+                since = datenow(),
+                updated = datenow(),
+                advertiser = self.advertiser,
+                category = self.category2,
+                zone = self.adzone2)
+
+        self.ad3= Ad.objects.create(
+                title = 'A Third Ad',
+                content = 'A third advert.',
+                url = 'http://www.teh-node.co.za/',
+                enabled = True,
+                since = datenow(),
+                updated = datenow(),
+                advertiser = self.advertiser,
+                category = self.category2,
+                zone = self.adzone2)
+
+      # Views Setup
         self.adview1 = AdView.objects.create(
                 ad = self.ad,
                 view_date=datenow(),
@@ -78,13 +110,13 @@ class AdvertingTestCase(TestCase):
     def testAddsInCategory(self):
         ads = Ad.objects.filter(category__slug='internet-services')
         self.assertEquals(len(ads), 1)
-        self.assertEquals(ads[0].title, 'Professional Web Design and Development')
+        self.assertEquals(ads[0].title, 'First Ad')
 
     def testAdView(self):
-        self.assertEquals(self.adview1.__unicode__(), 'Professional Web Design and Development')
+        self.assertEquals(self.adview1.__unicode__(), 'First Ad')
 
     def testAdClick(self):
-        self.assertEquals(self.adclick1.__unicode__(), 'Professional Web Design and Development')
+        self.assertEquals(self.adclick1.__unicode__(), 'First Ad')
 
     def testAdCategory(self):
         self.assertEquals(self.category.__unicode__(), 'Internet Services')
@@ -94,7 +126,13 @@ class AdvertingTestCase(TestCase):
 
     def testAdinZone(self):
         ads = Ad.objects.filter(zone__slug='sidebar')
-        self.assertEquals(ads[0].title, 'Professional Web Design and Development')
+        self.assertEquals(len(ads), 1)
 
     def testPriorityAds(self):
-        pass
+        from models import priority_ads
+        allads = priority_ads(Ad.objects.all())
+        self.assertEquals(len(allads), 3)
+
+        ads = priority_ads(Ad.objects.all(), ad_count=2)
+        self.assertEquals(len(ads), 2)
+        self.assertEquals(ads[0].title, 'First Ad')

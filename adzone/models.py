@@ -103,3 +103,10 @@ class AdClick(models.Model):
 
     def __unicode__(self):
         return "%s" % self.ad
+
+def priority_ads(ad_list=Ad.objects.all(), by_views=True, by_clicks=False, ad_count=5):
+    if by_views:
+        pass
+    if by_clicks:
+        pass
+    return ad_list[0:ad_count]
