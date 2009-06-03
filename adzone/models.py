@@ -108,7 +108,13 @@ def priority_ads(ad_list=Ad.objects.all(), by_views=False, by_clicks=False, ad_c
     """ This method will return adds by prioritising them by clicks or views
         TODO: by credits may also be implemented soon
     """
-    if by_views:
-        return 0 # FIXME: len(ad_list.adview_set())[0:ad_count]
-    elif by_clicks: return 0 # TODO: ad_list.order_by('sort here by number of items in view table')[0:ad_count] 
-    else: return ad_list[0:ad_count]
+    # For the moment just return the full list, till Django 1.1 is released
+    # if by_views:
+        # return ad_list.annotate(num_views=Count('adview_set')).order_by('num_views')[0:ad_count]
+        # return ad_list[0:ad_count]
+    # elif by_clicks:
+        # For the moment just return the full list, till Django 1.1 is released
+        # return ad_list.annotate(num_clicks=Count('adclick_set')).order_by('num_clicks')[0:ad_count]
+        # return ad_list[0:ad_count]
+    # else: return ad_list[0:ad_count]
+    return ad_list[0:ad_count]
