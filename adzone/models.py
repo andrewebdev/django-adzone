@@ -117,4 +117,6 @@ def priority_ads(ad_list=Ad.objects.all(), by_views=False, by_clicks=False, ad_c
         # return ad_list.annotate(num_clicks=Count('adclick_set')).order_by('num_clicks')[0:ad_count]
         # return ad_list[0:ad_count]
     # else: return ad_list[0:ad_count]
+
+    # FIXME: If not waiting for Django 1.1, look at 'extra()' or using raw SQL >.<
     return ad_list[0:ad_count]
