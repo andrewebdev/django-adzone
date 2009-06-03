@@ -1,5 +1,5 @@
 from django.test import TestCase
-from models import Advertiser, Ad, AdView, AdClick, AdCategory
+from models import Advertiser, Ad, AdView, AdClick, AdCategory, AdZone
 from django.contrib.auth.models import User
 
 def datenow():
@@ -21,6 +21,13 @@ class AdvertingTestCase(TestCase):
                 slug = 'internet-services',
                 description = 'All internet based services')
 
+        # Zones setup
+        self.adzone = AdZone.objects.create(
+                title = 'Sidebar',
+                slug = 'sidebar',
+                description = 'Side Bar Ads')
+
+        # Ad setup
         self.ad = Ad.objects.create(
                 title = 'Professional Web Design and Development',
                 content = 'For all your web design and development needs, at competitive rates.',
@@ -29,7 +36,8 @@ class AdvertingTestCase(TestCase):
                 since = datenow(),
                 updated = datenow(),
                 advertiser = self.advertiser,
-                category = self.category)
+                category = self.category,
+                zone = self.adzone)
 
         # Views Setup
         self.adview1 = AdView.objects.create(
@@ -80,3 +88,13 @@ class AdvertingTestCase(TestCase):
 
     def testAdCategory(self):
         self.assertEquals(self.category.__unicode__(), 'Internet Services')
+
+    def testAdZone(self):
+        self.assertEquals(self.adzone.__unicode__(), 'Sidebar')
+
+    def testAdinZone(self):
+        ads = Ad.objects.filter(zone__slug='sidebar')
+        self.assertEquals(ads[0].title, 'Professional Web Design and Development')
+
+    def testPriorityAds(self):
+        pass

@@ -36,6 +36,16 @@ class AdCategory(models.Model):
     def __unicode__(self):
         return "%s" % self.title
 
+class AdZone(models.Model):
+    """ a Model that describes the attributes and behaviours of ad zones
+    """
+    title = models.CharField(max_length=255)
+    slug = models.SlugField()
+    description = models.TextField()
+
+    def __unicode__(self):
+        return "%s" % self.title
+
 class Ad(models.Model):
     """ Our basic Advert Model
     """
@@ -45,8 +55,10 @@ class Ad(models.Model):
     enabled = models.BooleanField(default=False)
     since = models.DateTimeField(default=datenow())
     updated = models.DateTimeField()
+    # Relations
     advertiser = models.ForeignKey(Advertiser)
     category = models.ForeignKey(AdCategory)
+    zone = models.ForeignKey(AdZone)
 
     def __unicode__(self):
         return "%s" % self.title
