@@ -1,5 +1,6 @@
 from django.test import TestCase
 from models import Advertiser, Ad, AdView, AdClick, AdCategory, AdZone
+from models import priority_ads
 from django.contrib.auth.models import User
 
 def datenow():
@@ -129,10 +130,13 @@ class AdvertingTestCase(TestCase):
         self.assertEquals(len(ads), 1)
 
     def testPriorityAds(self):
-        from models import priority_ads
-        allads = priority_ads(Ad.objects.all())
+        allads = priority_ads() # Standard
+        self.assertEquals(len(allads), 3)
+        self.assertEquals(allads[1].title, 'Second Ad')
+
+        allads = priority_ads(by_views=True)
         self.assertEquals(len(allads), 3)
 
-        ads = priority_ads(Ad.objects.all(), ad_count=2)
-        self.assertEquals(len(ads), 2)
-        self.assertEquals(ads[0].title, 'First Ad')
+        sidebarads = priority_ads(Ad.objects.filter(zone__slug='sidebar'), by_views=True, ad_count=2)
+        self.assertEquals(len(sidebarads), 1)
+        self.assertEquals(sidebarads[0].title, 'First Ad')

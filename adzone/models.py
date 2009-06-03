@@ -104,9 +104,11 @@ class AdClick(models.Model):
     def __unicode__(self):
         return "%s" % self.ad
 
-def priority_ads(ad_list=Ad.objects.all(), by_views=True, by_clicks=False, ad_count=5):
+def priority_ads(ad_list=Ad.objects.all(), by_views=False, by_clicks=False, ad_count=5):
+    """ This method will return adds by prioritising them by clicks or views
+        TODO: by credits may also be implemented soon
+    """
     if by_views:
-        pass
-    if by_clicks:
-        pass
-    return ad_list[0:ad_count]
+        return 0 # FIXME: len(ad_list.adview_set())[0:ad_count]
+    elif by_clicks: return 0 # TODO: ad_list.order_by('sort here by number of items in view table')[0:ad_count] 
+    else: return ad_list[0:ad_count]
