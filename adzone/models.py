@@ -60,6 +60,12 @@ class Ad(models.Model):
     category = models.ForeignKey(AdCategory)
     zone = models.ForeignKey(AdZone)
 
+    # Adding these two hidden fields, for the priorityads function.
+    # This temporary solution that works. Hopefully django 1.1 will be released soon
+    # and then we can remove this :)
+    views = models.IntegerField(editable=False, default=0)
+    clicks = models.IntegerField(editable=False, default=0)
+
     def __unicode__(self):
         return "%s" % self.title
 
@@ -84,6 +90,23 @@ class Ad(models.Model):
                 click_date=datenow(),
                 click_ip=from_ip)
 
+    def get_clicks(self):
+        """ Method to return the number of clicks for the ad
+        """
+        return self.adclick_set.all().count()
+
+    def get_views(self):
+        """ Method to return the number of views for the ad
+        """
+        return self.adview_set.all().count()
+
+    # TODO: The following is messy, remove once Django 1.1 is stable and released
+    def update_clicks_views(self):
+        """ update the number of clicks and views, for use with the priority ads function
+        """
+        self.clicks = self.get_clicks()
+        self.views = self.get_views()
+
 class AdView(models.Model):
     """ The AdView Model will record every view that the ad has
     """
@@ -104,19 +127,18 @@ class AdClick(models.Model):
     def __unicode__(self):
         return "%s" % self.ad
 
-def priority_ads(ad_list=Ad.objects.all(), by_views=False, by_clicks=False, ad_count=5):
+def priority_ads(ad_list, by_views=False, by_clicks=False, ad_count=5):
     """ This method will return adds by prioritising them by clicks or views
-        TODO: by credits may also be implemented soon
     """
-    # For the moment just return the full list, till Django 1.1 is released
-    # if by_views:
-        # return ad_list.annotate(num_views=Count('adview_set')).order_by('num_views')[0:ad_count]
-        # return ad_list[0:ad_count]
-    # elif by_clicks:
-        # For the moment just return the full list, till Django 1.1 is released
-        # return ad_list.annotate(num_clicks=Count('adclick_set')).order_by('num_clicks')[0:ad_count]
-        # return ad_list[0:ad_count]
-    # else: return ad_list[0:ad_count]
-
-    # FIXME: If not waiting for Django 1.1, look at 'extra()' or using raw SQL >.<
-    return ad_list[0:ad_count]
+    if not ad_list: return False
+    if by_views:
+        try: # Django 1.1 ??
+            return ad_list.annotate(num_views=Count('adview_set')).order_by('num_views')[0:ad_count]
+        except:
+            return ad_list.order_by('views')[0:ad_count]
+    elif by_clicks:
+        try: # Django 1.1 ??
+            return ad_list.annotate(num_clicks=Count('adclick_set')).order_by('num_clicks')[0:ad_count]
+        except:
+            return ad_list.order_by('clicks')[0:ad_count]
+    else: return ad_list[0:ad_count]

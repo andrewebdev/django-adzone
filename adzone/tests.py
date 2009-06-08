@@ -96,13 +96,24 @@ class AdvertingTestCase(TestCase):
 
     def testAdViews(self):
         self.ad.view('222.0.3.45')
+
+        # TODO: Remove along with class method once Django 1.1 is released
+        self.assertEquals(self.ad.views, 0)
+        self.ad.update_clicks_views()
+        self.assertEquals(self.ad.views, 3)
+
         self.assertEquals(len(self.ad.adview_set.all()), 3)
         self.assertEquals(self.ad.adview_set.all()[2].view_ip, '222.0.3.45')
+        self.assertEquals(self.ad.get_views(), 3)
+        self.assertEquals(self.ad2.get_views(), 0)
 
     def testAdClicks(self):
         self.ad.click('222.0.3.45')
+
         self.assertEquals(len(self.ad.adclick_set.all()), 2)
         self.assertEquals(self.ad.adclick_set.all()[1].click_ip, '222.0.3.45')
+        self.assertEquals(self.ad.get_clicks(), 2)
+        self.assertEquals(self.ad2.get_clicks(), 0)
 
     def testAdAdvertiser(self):
         self.assertEquals(self.ad.advertiser.__unicode__(), 'teh_node Web Development')
@@ -130,12 +141,9 @@ class AdvertingTestCase(TestCase):
         self.assertEquals(len(ads), 1)
 
     def testPriorityAds(self):
-        allads = priority_ads() # Standard
+        allads = priority_ads(Ad.objects.all(), by_views=True)
         self.assertEquals(len(allads), 3)
         self.assertEquals(allads[1].title, 'Second Ad')
-
-        allads = priority_ads(by_views=True)
-        self.assertEquals(len(allads), 3)
 
         sidebarads = priority_ads(Ad.objects.filter(zone__slug='sidebar'), by_views=True, ad_count=2)
         self.assertEquals(len(sidebarads), 1)
