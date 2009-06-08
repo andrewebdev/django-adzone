@@ -33,6 +33,10 @@ class AdCategory(models.Model):
     slug = models.SlugField(unique=True)
     description = models.TextField()
 
+    class Meta:
+        verbose_name = 'Ad Category'
+        verbose_name_plural = 'Ad Categories'
+
     def __unicode__(self):
         return "%s" % self.title
 
@@ -42,6 +46,10 @@ class AdZone(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField()
     description = models.TextField()
+
+    class Meta:
+        verbose_name = 'Ad Zone'
+        verbose_name_plural = 'Ad Zones'
 
     def __unicode__(self):
         return "%s" % self.title
@@ -114,6 +122,10 @@ class AdView(models.Model):
     view_date = models.DateTimeField(default=datenow())
     view_ip = models.IPAddressField()
 
+    class Meta:
+        verbose_name = 'Ad View'
+        verbose_name_plural = 'Ad Views'
+
     def __unicode__(self):
         return "%s" % self.ad
 
@@ -123,6 +135,10 @@ class AdClick(models.Model):
     ad = models.ForeignKey(Ad)
     click_date = models.DateTimeField(default=datenow())
     click_ip = models.IPAddressField()
+
+    class Meta:
+        verbose_name = 'Ad Click'
+        verbose_name_plural = 'Ad Clicks'
 
     def __unicode__(self):
         return "%s" % self.ad
