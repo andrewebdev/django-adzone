@@ -54,25 +54,25 @@ class AdZone(models.Model):
     def __unicode__(self):
         return "%s" % self.title
 
-class Ad(models.Model):
+class AdBase(models.Model):
     """ Our basic Advert Model
     """
     title = models.CharField(max_length=255)
-    content = models.TextField()
     url = models.URLField(verify_exists=True)
     enabled = models.BooleanField(default=False)
     since = models.DateTimeField(default=datenow())
-    updated = models.DateTimeField()
+    updated = models.DateTimeField(editable=False)
     # Relations
     advertiser = models.ForeignKey(Advertiser)
     category = models.ForeignKey(AdCategory)
     zone = models.ForeignKey(AdZone)
 
-    # Adding these two hidden fields, for the priorityads function.
-    # This temporary solution that works. Hopefully django 1.1 will be released soon
-    # and then we can remove this :)
-    views = models.IntegerField(editable=False, default=0)
-    clicks = models.IntegerField(editable=False, default=0)
+    class Meta:
+        abstract = True
+
+    def save(self, *args, **kwargs):
+        self.updated = datenow()
+        super(AdBase, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return "%s" % self.title
@@ -80,45 +80,24 @@ class Ad(models.Model):
     def get_ad_url(self):
         return self.url
 
-    def view(self, from_ip):
-        """ method called when the ad is shown on a webpage
-            from_ip should be valid ip string ie. '127.0.0.1'
-        """
-        adview = AdView.objects.create(
-                ad=self,
-                view_date=datenow(),
-                view_ip=from_ip)
+class TextAd(AdBase):
+    """ A Text based Ad
+    """
+    content = models.TextField()
 
-    def click(self, from_ip):
-        """ method called when the ad is clicked
-            from_ip should be valid ip string ie. '127.0.0.1'
-        """
-        adclick = AdClick.objects.create(
-                ad=self,
-                click_date=datenow(),
-                click_ip=from_ip)
+class BannerAd(AdBase):
+    """ A standard banner Ad
+    """
+    content = models.ImageField(upload_to="adzone/bannerads/")
 
-    def get_clicks(self):
-        """ Method to return the number of clicks for the ad
-        """
-        return self.adclick_set.all().count()
-
-    def get_views(self):
-        """ Method to return the number of views for the ad
-        """
-        return self.adview_set.all().count()
-
-    # TODO: The following is messy, remove once Django 1.1 is stable and released
-    def update_clicks_views(self):
-        """ update the number of clicks and views, for use with the priority ads function
-        """
-        self.clicks = self.get_clicks()
-        self.views = self.get_views()
+class FlashAd(AdBase):
+    """ A Flash based ad
+    """
+    content = models.FileField(upload_to="adzone/flashads/")
 
 class AdView(models.Model):
     """ The AdView Model will record every view that the ad has
     """
-    ad = models.ForeignKey(Ad)
     view_date = models.DateTimeField(default=datenow())
     view_ip = models.IPAddressField()
 
@@ -132,7 +111,6 @@ class AdView(models.Model):
 class AdClick(models.Model):
     """ The AdClick model will record every click that a add gets
     """
-    ad = models.ForeignKey(Ad)
     click_date = models.DateTimeField(default=datenow())
     click_ip = models.IPAddressField()
 
@@ -142,19 +120,3 @@ class AdClick(models.Model):
 
     def __unicode__(self):
         return "%s" % self.ad
-
-def priority_ads(ad_list, by_views=False, by_clicks=False, ad_count=5):
-    """ This method will return adds by prioritising them by clicks or views
-    """
-    if not ad_list: return False
-    if by_views:
-        try: # Django 1.1 ??
-            return ad_list.annotate(num_views=Count('adview_set')).order_by('num_views')[0:ad_count]
-        except:
-            return ad_list.order_by('views')[0:ad_count]
-    elif by_clicks:
-        try: # Django 1.1 ??
-            return ad_list.annotate(num_clicks=Count('adclick_set')).order_by('num_clicks')[0:ad_count]
-        except:
-            return ad_list.order_by('clicks')[0:ad_count]
-    else: return ad_list[0:ad_count]
