@@ -43,8 +43,6 @@ class AdvertisingTestCase(TestCase):
                 content = 'For all your web design and development needs, at competitive rates.',
                 url = 'http://www.teh-node.co.za/',
                 enabled = True,
-                since = datenow(),
-                updated = datenow(),
                 advertiser = self.advertiser,
                 category = self.category,
                 zone = self.adzone)
@@ -54,8 +52,6 @@ class AdvertisingTestCase(TestCase):
                 content = 'A second advert.',
                 url = 'http://www.teh-node.co.za/',
                 enabled = True,
-                since = datenow(),
-                updated = datenow(),
                 advertiser = self.advertiser,
                 category = self.category2,
                 zone = self.adzone2)
@@ -65,8 +61,6 @@ class AdvertisingTestCase(TestCase):
                 content = 'A third advert.',
                 url = 'http://www.teh-node.co.za/',
                 enabled = True,
-                since = datenow(),
-                updated = datenow(),
                 advertiser = self.advertiser,
                 category = self.category2,
                 zone = self.adzone2)
