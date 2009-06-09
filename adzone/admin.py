@@ -8,9 +8,30 @@
 from django.contrib import admin
 from adzone.models import Advertiser, AdCategory, AdZone, TextAd, BannerAd, FlashAd
 
-admin.site.register(Advertiser)
+class AdvertiserAdmin(admin.ModelAdmin):
+    search_fields = ['company_name', 'website']
+
+class AdZoneAdmin(admin.ModelAdmin):
+    list_display = ['title', 'slug', 'description']
+
+class TextAdAdmin(admin.ModelAdmin):
+    list_display = ['title', 'url', 'advertiser', 'updated', 'enabled']
+    list_filter = ['updated', 'enabled']
+    search_fields = ['title', 'url', 'content']
+
+class BannerAdAdmin(admin.ModelAdmin):
+    list_display = ['title', 'url', 'advertiser', 'updated', 'enabled']
+    list_filter = ['updated', 'enabled']
+    search_fields = ['title', 'url']
+
+class FlashAdAdmin(admin.ModelAdmin):
+    list_display = ['title', 'url', 'advertiser', 'updated', 'enabled']
+    list_filter = ['updated', 'enabled']
+    search_fields = ['title', 'url']
+
+admin.site.register(Advertiser, AdvertiserAdmin)
 admin.site.register(AdCategory)
-admin.site.register(AdZone)
-admin.site.register(TextAd)
-admin.site.register(BannerAd)
-admin.site.register(FlashAd)
+admin.site.register(AdZone, AdZoneAdmin)
+admin.site.register(TextAd, TextAdAdmin)
+admin.site.register(BannerAd, BannerAdAdmin)
+admin.site.register(FlashAd, FlashAdAdmin)
