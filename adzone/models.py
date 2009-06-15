@@ -7,6 +7,8 @@
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes import generic
 
 def datenow():
     """Just s quick function to return the current date and time"""
@@ -54,6 +56,34 @@ class AdZone(models.Model):
     def __unicode__(self):
         return "%s" % self.title
 
+class AdImpression(models.Model):
+    """ The AdImpression Model will record every time the ad is loaded on a page
+    """
+    impression_date = models.DateTimeField(default=datenow())
+    source_ip = models.IPAddressField()
+    # Set up our content type 
+    content_type = models.ForeignKey(ContentType)
+    object_id = models.PositiveIntegerField()
+    content_object = generic.GenericForeignKey('content_type', 'object_id')
+
+    class Meta:
+        verbose_name = 'Ad Impression'
+        verbose_name_plural = 'Ad Impressions'
+
+class AdClick(models.Model):
+    """ The AdClick model will record every click that a add gets
+    """
+    click_date = models.DateTimeField(default=datenow())
+    source_ip = models.IPAddressField()
+    # Set up our content type 
+    content_type = models.ForeignKey(ContentType)
+    object_id = models.PositiveIntegerField()
+    content_object = generic.GenericForeignKey('content_type', 'object_id')
+
+    class Meta:
+        verbose_name = 'Ad Click'
+        verbose_name_plural = 'Ad Clicks'
+
 class AdBase(models.Model):
     """ Our basic Advert Model
     """
@@ -66,6 +96,8 @@ class AdBase(models.Model):
     advertiser = models.ForeignKey(Advertiser)
     category = models.ForeignKey(AdCategory)
     zone = models.ForeignKey(AdZone)
+    impressions = generic.GenericRelation(AdImpression)
+    clicks = generic.GenericRelation(AdClick)
 
     class Meta:
         abstract = True
@@ -74,49 +106,42 @@ class AdBase(models.Model):
         self.updated = datenow()
         super(AdBase, self).save(*args, **kwargs)
 
-    def __unicode__(self):
-        return "%s" % self.title
+    def get_absolute_url(self, request):
+        """ This url will redirect to the local view for the ad
+            The local view will record the click in the database,
+            and then redirect to the actual url the ad was pointing to
 
-    def get_ad_url(self):
-        return self.url
+            Since we are getting the url for the ad, it means that the
+            ad is being shown on a webpage somewhere. So we need to add a
+            Impression
+        """
+        # ad_type = ContentType.objects.get(app_label='adzone', model=self)
+        impression = AdImpression(content_object=self, impression_date=datenow(), source_ip=request.META.get('REMOTE_ADDR'))
+        impression.save()
+        return self.id
 
 class TextAd(AdBase):
     """ A Text based Ad
     """
     content = models.TextField()
 
+    def get_absolute_url(self, request):
+        """ Overload to return text ads """
+        return "/textad/%s" % AdBase.get_absolute_url(self, request)
+
 class BannerAd(AdBase):
     """ A standard banner Ad
     """
     content = models.ImageField(upload_to="adzone/bannerads/")
+
+    def get_absolute_url(self, request):
+        """ Overload to return bannder ads """
+        return "/bannerad/%s" % AdBase.get_absolute_url(self, request)
 
 class FlashAd(AdBase):
     """ A Flash based ad
     """
     content = models.FileField(upload_to="adzone/flashads/")
 
-class AdView(models.Model):
-    """ The AdView Model will record every view that the ad has
-    """
-    view_date = models.DateTimeField(default=datenow())
-    view_ip = models.IPAddressField()
-
-    class Meta:
-        verbose_name = 'Ad View'
-        verbose_name_plural = 'Ad Views'
-
-    def __unicode__(self):
-        return "%s" % self.ad
-
-class AdClick(models.Model):
-    """ The AdClick model will record every click that a add gets
-    """
-    click_date = models.DateTimeField(default=datenow())
-    click_ip = models.IPAddressField()
-
-    class Meta:
-        verbose_name = 'Ad Click'
-        verbose_name_plural = 'Ad Clicks'
-
-    def __unicode__(self):
-        return "%s" % self.ad
+    def get_absolute_url(self, request):
+        return "/flashad/%s" % AdBase.get_absolute_url(self, request)

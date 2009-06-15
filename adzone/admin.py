@@ -6,7 +6,7 @@
 # If this script is distributed, it must be accompanied by the Licence
 
 from django.contrib import admin
-from adzone.models import Advertiser, AdCategory, AdZone, TextAd, BannerAd, FlashAd
+from adzone.models import Advertiser, AdCategory, AdZone, TextAd, BannerAd, FlashAd, AdClick, AdImpression
 
 class AdvertiserAdmin(admin.ModelAdmin):
     search_fields = ['company_name', 'website']
@@ -29,9 +29,17 @@ class FlashAdAdmin(admin.ModelAdmin):
     list_filter = ['updated', 'enabled']
     search_fields = ['title', 'url']
 
+class AdClickAdmin(admin.ModelAdmin):
+    pass
+
+class AdImpressionAdmin(admin.ModelAdmin):
+    pass
+
 admin.site.register(Advertiser, AdvertiserAdmin)
 admin.site.register(AdCategory)
 admin.site.register(AdZone, AdZoneAdmin)
 admin.site.register(TextAd, TextAdAdmin)
 admin.site.register(BannerAd, BannerAdAdmin)
 admin.site.register(FlashAd, FlashAdAdmin)
+admin.site.register(AdClick, AdClickAdmin)
+admin.site.register(AdImpression, AdImpressionAdmin)
