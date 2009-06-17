@@ -107,16 +107,6 @@ class AdBase(models.Model):
         super(AdBase, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        """ This url will redirect to the local view for the ad
-            The local view will record the click in the database,
-            and then redirect to the actual url the ad was pointing to
-
-            Since we are getting the url for the ad, it means that the
-            ad is being shown on a webpage somewhere. So we need to add a
-            Impression
-        """
-        # impression = AdImpression(content_object=self, impression_date=datenow(), source_ip=request.META.get('REMOTE_ADDR'))
-        # impression.save()
         return self.id
 
 class TextAd(AdBase):

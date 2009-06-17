@@ -9,6 +9,11 @@ from django import template
 from random import choice
 import re
 from django.contrib.contenttypes.models import ContentType
+from adzone.models import AdImpression
+from datetime import datetime
+
+def datenow():
+    return datetime.now()
 
 register = template.Library()
 
@@ -41,6 +46,8 @@ class ZoneAd(template.Node):
     """ This template tag returns a single ad from the database.
         ad_model is the advertising model ie textad or bannerad
         zone_slug is the slug for the specific zone to which the ad belongs
+
+        Since we are viewing the ad (otherwise we would not show the url), we count this as a impression
     """
     def __init__(self, ad_model, zone_slug, var_name):
         self.ad_model, self.zone_slug = ad_model, zone_slug
@@ -48,6 +55,9 @@ class ZoneAd(template.Node):
 
     def render(self, context):
         ad_type = ContentType.objects.get(app_label='adzone', model=self.ad_model)
-        ads = ad_type.model_class().objects.filter(zone__slug=self.zone_slug)
-        context[self.var_name] = choice(ads)
+        ad = choice(ad_type.model_class().objects.filter(zone__slug=self.zone_slug))
+        if context.has_key('from_ip'):
+            impression = AdImpression(content_object=ad, impression_date=datenow(), source_ip=context['from_ip'])
+            impression.save()
+        context[self.var_name] = ad
         return ''

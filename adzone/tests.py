@@ -142,13 +142,9 @@ class ZoneTestCase(AdvertisingTestCase):
 class AdvertTestCase(AdvertisingTestCase):
     def testAd(self):
         self.assertEquals(self.ad.get_absolute_url(), '/textad/1')
-        # Check if the impression was added
-        impressions = AdImpression.objects.all()
-        self.assertEquals(len(impressions), 3)
         myimpressions = self.ad.impressions.all()
-        self.assertEquals(len(myimpressions), 2)
+        self.assertEquals(len(myimpressions), 1)
         self.assertEquals(myimpressions[0].source_ip, '127.0.0.2')
-        self.assertEquals(myimpressions[1].source_ip, '127.0.0.1')
 
     def testAdAdvertiser(self):
         self.assertEquals(self.ad.advertiser.__unicode__(), 'teh_node Web Development')
