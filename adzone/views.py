@@ -18,7 +18,6 @@ def adView(request, model, id):
         If yes, record the click in the database, then redirect to ad url
         If no, 404
     """
-    # referrer = request.META.get('HTTP_REFERRER') 
     try:
         ad_type = ContentType.objects.get(app_label='adzone', model=model)
         ad = ad_type.get_object_for_this_type(id=id)

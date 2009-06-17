@@ -141,7 +141,7 @@ class ZoneTestCase(AdvertisingTestCase):
 
 class AdvertTestCase(AdvertisingTestCase):
     def testAd(self):
-        self.assertEquals(self.ad.get_absolute_url(self.request), '/textad/1')
+        self.assertEquals(self.ad.get_absolute_url(), '/textad/1')
         # Check if the impression was added
         impressions = AdImpression.objects.all()
         self.assertEquals(len(impressions), 3)

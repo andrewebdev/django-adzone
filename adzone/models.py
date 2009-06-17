@@ -106,7 +106,7 @@ class AdBase(models.Model):
         self.updated = datenow()
         super(AdBase, self).save(*args, **kwargs)
 
-    def get_absolute_url(self, request):
+    def get_absolute_url(self):
         """ This url will redirect to the local view for the ad
             The local view will record the click in the database,
             and then redirect to the actual url the ad was pointing to
@@ -115,9 +115,8 @@ class AdBase(models.Model):
             ad is being shown on a webpage somewhere. So we need to add a
             Impression
         """
-        # ad_type = ContentType.objects.get(app_label='adzone', model=self)
-        impression = AdImpression(content_object=self, impression_date=datenow(), source_ip=request.META.get('REMOTE_ADDR'))
-        impression.save()
+        # impression = AdImpression(content_object=self, impression_date=datenow(), source_ip=request.META.get('REMOTE_ADDR'))
+        # impression.save()
         return self.id
 
 class TextAd(AdBase):
@@ -125,23 +124,23 @@ class TextAd(AdBase):
     """
     content = models.TextField()
 
-    def get_absolute_url(self, request):
+    def get_absolute_url(self):
         """ Overload to return text ads """
-        return "/textad/%s" % AdBase.get_absolute_url(self, request)
+        return "/textad/%s" % super(TextAd, self).get_absolute_url()
 
 class BannerAd(AdBase):
     """ A standard banner Ad
     """
     content = models.ImageField(upload_to="adzone/bannerads/")
 
-    def get_absolute_url(self, request):
+    def get_absolute_url(self):
         """ Overload to return bannder ads """
-        return "/bannerad/%s" % AdBase.get_absolute_url(self, request)
+        return "/bannerad/%s" % super(BannerAd, self).get_absolute_url()
 
 class FlashAd(AdBase):
     """ A Flash based ad
     """
     content = models.FileField(upload_to="adzone/flashads/")
 
-    def get_absolute_url(self, request):
-        return "/flashad/%s" % AdBase.get_absolute_url(self, request)
+    def get_absolute_url(self):
+        return "/flashad/%s" % super(FlashAd, self).get_absolute_url()
