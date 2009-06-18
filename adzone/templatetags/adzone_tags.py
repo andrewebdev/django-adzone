@@ -12,9 +12,6 @@ from django.contrib.contenttypes.models import ContentType
 from adzone.models import AdImpression
 from datetime import datetime
 
-def datenow():
-    return datetime.now()
-
 register = template.Library()
 
 @register.tag(name='zone_ad')
@@ -57,7 +54,7 @@ class ZoneAd(template.Node):
         ad_type = ContentType.objects.get(app_label='adzone', model=self.ad_model)
         ad = choice(ad_type.model_class().objects.filter(zone__slug=self.zone_slug, enabled=True))
         if context.has_key('from_ip'):
-            impression = AdImpression(content_object=ad, impression_date=datenow(), source_ip=context['from_ip'])
+            impression = AdImpression(content_object=ad, impression_date=datetime.now, source_ip=context['from_ip'])
             impression.save()
         context[self.var_name] = ad
         return ''

@@ -9,11 +9,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
-
-def datenow():
-    """Just s quick function to return the current date and time"""
-    from datetime import datetime
-    return datetime.now()
+from datetime import datetime
 
 class Advertiser(models.Model):
     """ A Model for our Advertiser
@@ -59,7 +55,7 @@ class AdZone(models.Model):
 class AdImpression(models.Model):
     """ The AdImpression Model will record every time the ad is loaded on a page
     """
-    impression_date = models.DateTimeField(default=datenow())
+    impression_date = models.DateTimeField(default=datetime.now)
     source_ip = models.IPAddressField()
     # Set up our content type 
     content_type = models.ForeignKey(ContentType)
@@ -73,7 +69,7 @@ class AdImpression(models.Model):
 class AdClick(models.Model):
     """ The AdClick model will record every click that a add gets
     """
-    click_date = models.DateTimeField(default=datenow())
+    click_date = models.DateTimeField(default=datetime.now)
     source_ip = models.IPAddressField()
     # Set up our content type 
     content_type = models.ForeignKey(ContentType)
@@ -90,7 +86,7 @@ class AdBase(models.Model):
     title = models.CharField(max_length=255)
     url = models.URLField(verify_exists=True)
     enabled = models.BooleanField(default=False)
-    since = models.DateTimeField(default=datenow())
+    since = models.DateTimeField(default=datetime.now)
     updated = models.DateTimeField(editable=False)
     # Relations
     advertiser = models.ForeignKey(Advertiser)
@@ -103,7 +99,7 @@ class AdBase(models.Model):
         abstract = True
 
     def save(self, *args, **kwargs):
-        self.updated = datenow()
+        self.updated = datetime.now()
         super(AdBase, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
