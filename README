@@ -6,18 +6,55 @@ h2. LICENSE
 
 Please see the LICENCE file for information on the License
 
-h2. django-adzone Use Cases
+h2. Concept behind adzone
 
-... tbc ...
+The concept behind adzone is quite simple. You have certain areas on your website reserved for adverts. The size and nature of the ads may differ for each of these areas. Adzone allows exactly this kind of functionality, by choosing which adds belong to certain zones.
+
+Ads are grouped according to 2 criteria
+
+h3. 1.The Category
+
+The ad category explains the nature or subject matter for the advert. This can help to specify in which pages of your site you want a specific group of ads to appear. For example, you have a bunch of ads related to your blog, so you add them to your Blog category.
+
+h3. 2.The Zone
+
+Zone specifies what area on the current page the ad belongs to. If you are displaying a ad on your blog you might have 2 zones, one for content, and one for the right column.
+
+These two grouping criteria provides enough flexability to control what ads will display where. All you need to do is to use the adzone template tags, to specify categories and zones in your templates.
 
 h2. Requirements
 
-... tbc ...
+There are no external requirements for this project.
 
 h2. Installing
 
-... tbc ...
+Installation instructions may vary depending on your environment.
+To install system wide however, just run:
+
+@python setup.py install@
 
 h2. How to use
 
-... tbc ...
+h3. Getting Started
+1. Add @adzone@ to your installed apps
+2. To make sure that the user IP is recorded on the impressions, add the following to your TEMPLATE_CONTEXT_PROCESSORS: @'adzone.context_processors.get_source_ip'@ (this is not a requirement for the app to work in general)
+3. Add the adzone urls to your project urls: @(r'^adzone/', include('adzone.urls')),@
+4. Remember to run syncdb again :)
+
+h3. Using the built-in template tag to display an ad
+To show a specific ad in a template, you can use the built-in template tag.
+Lets say you have the following Ad Category and Zone set up in your database (via Admin):
+_ad category_ title: 'General'
+_ad category_ slug : 'general'
+_ad zone_ title: 'Content'
+_ad zone_ slug: 'content'
+
+Now, in your template, you first want to load the tag library:
+@{% load adzone_tags %}@
+
+Next, ad the tag to the specific area where you want the ads to appear:
+@{% zone_ad 'general' 'content' %}
+
+The ads are first filtered by the _category_ and _zone_ slugs you pass to the tag, and then a random ad is returned.
+
+*One Tag to rule them all!* No seriously, you only need the one tag to display any type of ad, textads or bannerads. This even applies if you decide to create your own types of ads (by extending the AdBase model).
