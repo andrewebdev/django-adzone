@@ -1,8 +1,9 @@
 from django.test import TestCase
 from django.test.client import Client
 from django.core.handlers.wsgi import WSGIRequest
+from django.core.urlresolvers import reverse
 
-from models import Advertiser, AdImpression, AdClick, AdCategory, AdZone, TextAd, BannerAd, FlashAd
+from adzone.models import *
 from django.contrib.auth.models import User
 
 def datenow():
@@ -111,17 +112,17 @@ class AdvertisingTestCase(TestCase):
         self.impression1 = AdImpression.objects.create(
                 impression_date=datenow(),
                 source_ip='127.0.0.2',
-                content_object=self.ad)
+                ad=self.ad)
         self.impression2 = AdImpression.objects.create(
                 impression_date=datenow(),
                 source_ip='127.0.0.3',
-                content_object=self.ad2)
+                ad=self.ad2)
 
         # Clicks Setup
         self.adclick1 = AdClick.objects.create(
                 click_date=datenow(),
                 source_ip='127.0.0.1',
-                content_object=self.ad)
+                ad=self.ad)
         
 class AdvertiserTestCase(AdvertisingTestCase):
     def testAdvertiser(self):
@@ -141,10 +142,13 @@ class ZoneTestCase(AdvertisingTestCase):
 
 class AdvertTestCase(AdvertisingTestCase):
     def testAd(self):
-        self.assertEquals(self.ad.get_absolute_url(), '/textad/1')
-        myimpressions = self.ad.impressions.all()
-        self.assertEquals(len(myimpressions), 1)
-        self.assertEquals(myimpressions[0].source_ip, '127.0.0.2')
+        self.assertEquals(reverse(
+            'adzone_ad_view',
+            args=['1']
+        )[-8:], '/view/1/')
+        adimpressions = AdImpression.objects.filter(ad=self.ad)
+        self.assertEquals(len(adimpressions), 1)
+        self.assertEquals(adimpressions[0].source_ip, '127.0.0.2')
 
     def testAdAdvertiser(self):
         self.assertEquals(self.ad.advertiser.__unicode__(), 'teh_node Web Development')
@@ -154,6 +158,13 @@ class AdvertTestCase(AdvertisingTestCase):
         ads = TextAd.objects.filter(category__slug='internet-services')
         self.assertEquals(len(ads), 1)
         self.assertEquals(ads[0].title, 'First Ad')
+
+    def testRandomAd(self):
+        ad = AdBase.objects.get_random_ad(
+            ad_category='internet-services',
+            ad_zone='sidebar'
+        )
+        self.assertEquals(ad.title, 'First Ad')
 
 class ImpressionTestCase(AdvertisingTestCase):
     def testImpression(self):
@@ -167,7 +178,10 @@ class ClickTestCase(AdvertisingTestCase):
 
     def testClickOnAds(self):
         c = Client(REMOTE_ADDR='127.0.0.1')
-        response = c.get('/textad/1')
+        response = c.get(reverse(
+            'adzone_ad_view',
+            args=['1']
+        ))
         self.assertEquals(len(AdClick.objects.all()), 2)
         click = AdClick.objects.all()[1]
         self.assertEquals(click.source_ip, '127.0.0.1')

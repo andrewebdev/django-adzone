@@ -1,5 +1,7 @@
 from django.conf.urls.defaults import *
 
+from adzone.views import ad_view
+
 urlpatterns = patterns('',
-    (r'^(?P<model>[\w]+)/(?P<id>[\d]+)$', 'adzone.views.adView'),
+    url(r'^view/(?P<id>[\d]+)/$', ad_view, name='adzone_ad_view'),
 )

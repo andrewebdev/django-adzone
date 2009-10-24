@@ -1,0 +1,24 @@
+{% comment %}
+A instace of AdBase is passed to this tag.
+
+... more documentation needed ...
+
+{% endcomment %}
+
+{% if ad.textad %}
+    <div class="ad_text">
+        <p><a target="_blank" href="{{ ad.get_absolute_url }}">{{ ad.textad.content }}</a></p>
+    </div>
+{% endif %}
+
+{% if ad.bannerad %}
+    <div class="ad_banner">
+        <a target="_blank" href="{{ ad.get_absolute_url }}"><img src="{{ ad.bannerad.content.url }}" alt="{{ ad.title }}" /></a>
+    </div>
+{% endif %}
+
+{% if ad.flashad %}
+    <div class="ad_flash">
+        <p>...tbc...</p>
+    </div>
+{% endif %}
