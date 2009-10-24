@@ -16,9 +16,3 @@ A instace of AdBase is passed to this tag.
         <a target="_blank" href="{{ ad.get_absolute_url }}"><img src="{{ ad.bannerad.content.url }}" alt="{{ ad.title }}" /></a>
     </div>
 {% endif %}
-
-{% if ad.flashad %}
-    <div class="ad_flash">
-        <p>...tbc...</p>
-    </div>
-{% endif %}

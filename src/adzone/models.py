@@ -123,7 +123,3 @@ class TextAd(AdBase):
 class BannerAd(AdBase):
     """ A standard banner Ad """
     content = models.ImageField(upload_to="adzone/bannerads/")
-
-class FlashAd(AdBase):
-    """ A Flash based ad """
-    content = models.FileField(upload_to="adzone/flashads/")
