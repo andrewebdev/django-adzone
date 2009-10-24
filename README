@@ -2,9 +2,24 @@ h1. django-adzone Documentation
 
 © Copyright 2009 Andre Engelbrecht. All Rights Reserved.
 
-h2. LICENSE
+h2. License
 
 Please see the LICENCE file for information on the License
+
+h2. Disclaimer
+
+Please take note: django-adzone has just gone through a major update. If you have been using the previous version of django-adzone, then you should not upgrade since you are highly likely to break something. You have been warned :)
+
+*0.2a* is a alpha release. Please test and report any bugs that you may find.
+
+h2. Release Notes
+
+* AdBase model is no longer abstract
+* Added a manager to the AdBase class which can be used to return specific ads
+* AdBase child models (ie. textad and bannerad) no longer needs a get_absolute_url method
+* Removed the FlashAd model. This will be used in a example on how to create your own ad types (coming soon)
+* The url to view a ad is now a named url pattern, so reverse lookups can be used.
+* The zone_ad template tag is now a inclusion_tag
 
 h2. Concept behind adzone
 
