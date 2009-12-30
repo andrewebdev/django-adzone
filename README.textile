@@ -77,7 +77,7 @@ Now, in your template, you first want to load the tag library:
 @{% load adzone_tags %}@
 
 Next, ad the tag to the specific area where you want the ads to appear:
-@{% zone_ad 'general' 'content' %}@
+@{% random_zone_ad 'general' 'content' %}@
 
 The ads are first filtered by the _category_ and _zone_ slugs you pass to the tag, and then a random ad is returned.
 
