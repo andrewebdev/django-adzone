@@ -95,7 +95,7 @@ class AdImpression(models.Model):
 
     """
     impression_date = models.DateTimeField(default=datetime.now)
-    source_ip = models.IPAddressField()
+    source_ip = models.IPAddressField(null=True, blank=True)
     ad = models.ForeignKey(AdBase)
 
     class Meta:
@@ -108,7 +108,7 @@ class AdClick(models.Model):
 
     """
     click_date = models.DateTimeField(default=datetime.now)
-    source_ip = models.IPAddressField()
+    source_ip = models.IPAddressField(null=True, blank=True)
     ad = models.ForeignKey(AdBase)
 
     class Meta:
