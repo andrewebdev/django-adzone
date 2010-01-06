@@ -18,10 +18,13 @@ def ad_view(request, id):
 
     """
     ad = get_object_or_404(AdBase, id=id)
-    click = AdClick(
-        ad=ad,
-        click_date=datetime.now(),
-        source_ip=request.META.get('REMOTE_ADDR')
-    )
-    click.save()
+    try:
+        click = AdClick(
+            ad=ad,
+            click_date=datetime.now(),
+            source_ip=request.META.get('REMOTE_ADDR')
+        )
+        click.save()
+    except:
+        pass
     return HttpResponseRedirect(ad.url)
