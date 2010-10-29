@@ -14,6 +14,7 @@ Please take note: django-adzone has just gone through a major update. If you hav
 
 h2. Release Notes
 
+* Many thanks to, *Rafael* for adding internationalization and pt_BR translation!
 * AdBase model is no longer abstract
 * Added a manager to the AdBase class which can be used to return specific ads
 * AdBase child models (ie. textad and bannerad) no longer needs a get_absolute_url method
