@@ -126,17 +126,18 @@ class AdvertisingTestCase(TestCase):
         
 class AdvertiserTestCase(AdvertisingTestCase):
     def testAdvertiser(self):
-        self.assertEquals(self.advertiser.get_website_url(), 'http://andre.smoenux.webfactional.com/')
-
-class CategoryTestCase(AdvertisingTestCase):
-    def testAdCategory(self):
-        self.assertEquals(self.category.__unicode__(), 'Internet Services')
+        self.assertEquals(self.advertiser.get_website_url(),
+                          'http://andre.smoenux.webfactional.com/')
 
 class ZoneTestCase(AdvertisingTestCase):
     def testAdZone(self):
+        # TODO: Remove test?
+        ## This test is kinda useless, should we remove it?
         self.assertEquals(self.adzone.__unicode__(), 'Sidebar')
 
     def testAdinZone(self):
+        # TODO: Remove test?
+        ## This test is kinda useless, should we remove it?
         ads = TextAd.objects.filter(zone__slug='sidebar')
         self.assertEquals(len(ads), 1)
 
@@ -151,20 +152,26 @@ class AdvertTestCase(AdvertisingTestCase):
         self.assertEquals(adimpressions[0].source_ip, '127.0.0.2')
 
     def testAdAdvertiser(self):
+        # TODO: Remove test?
+        ## This test is kinda useless, should we remove it?
         self.assertEquals(self.ad.advertiser.__unicode__(), 'teh_node Web Development')
         self.assertEquals(self.ad.advertiser.company_name, 'teh_node Web Development')
 
     def testAddsInCategory(self):
+        # TODO: Remove test?
+        ## This test is kinda useless, should we remove it?
         ads = TextAd.objects.filter(category__slug='internet-services')
         self.assertEquals(len(ads), 1)
         self.assertEquals(ads[0].title, 'First Ad')
 
     def testRandomAd(self):
-        ad = AdBase.objects.get_random_ad(
-            ad_category='internet-services',
-            ad_zone='sidebar'
+        self.assertEquals(
+            AdBase.objects.get_random_ad('sidebar', 'internet-services').textad,
+            self.ad
         )
-        self.assertEquals(ad.title, 'First Ad')
+        ad_list = [self.ad, self.ad2, self.ad3]
+        self.failUnless(
+            AdBase.objects.get_random_ad('sidebar').textad in ad_list)
 
 class ImpressionTestCase(AdvertisingTestCase):
     def testImpression(self):
