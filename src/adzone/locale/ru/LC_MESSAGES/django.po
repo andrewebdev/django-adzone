@@ -1,0 +1,75 @@
+# Django AdZone
+# Copyright (C) 2011 Ruslan Popov
+# This file is distributed under the same license as the Django-AdZone package.
+# Ruslan Popov <ruslan.popov@gmail.com>, 2011.
+# Ruslan Popov <ruslan.popov@gmail.com>, 2011.
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0\n"
+"Report-Msgid-Bugs-To: ruslan.popov@gmail.com\n"
+"POT-Creation-Date: 2011-01-16 15:02+0300\n"
+"PO-Revision-Date: 2011-01-16 15:11+0300\n"
+"Last-Translator: Ruslan Popov <ruslan.popov@gmail.com>\n"
+"Language-Team: ru <RU@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
+"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+
+#: models.py:22
+msgid "Company Name"
+msgstr "Название компании"
+
+#: models.py:23
+msgid "Company Site"
+msgstr "Сайт компании"
+
+#: models.py:27
+msgid "Advertiser"
+msgstr "Рекламодатель"
+
+#: models.py:28
+msgid "Advertisers"
+msgstr "Рекламодатели"
+
+#: models.py:42 models.py:59 models.py:78
+msgid "Title"
+msgstr "Заголовок"
+
+#: models.py:43 models.py:60
+msgid "Slug"
+msgstr "Транслит"
+
+#: models.py:44 models.py:61
+msgid "Description"
+msgstr "Описание"
+
+#: models.py:79
+msgid "Advertised URL"
+msgstr "Рекламируемый URL"
+
+#: models.py:80
+msgid "Enabled"
+msgstr "Активен"
+
+#: models.py:81
+msgid "Since"
+msgstr "С момента"
+
+#: models.py:82
+msgid "Updated"
+msgstr "Обновлён"
+
+#: models.py:108 models.py:121
+msgid "When"
+msgstr "Когда"
+
+#: models.py:109 models.py:122
+msgid "Who"
+msgstr "Кто"
+
+#: models.py:132 models.py:136
+msgid "Content"
+msgstr "Содержимое"
