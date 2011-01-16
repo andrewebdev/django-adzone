@@ -24,8 +24,11 @@ class AdBaseAdmin(admin.ModelAdmin):
     list_filter = ['updated', 'enabled', 'since', 'updated']
     search_fields = ['title', 'url']
 
-class TextAdAdmin(AdBaseAdmin):
-    search_fields = ['title', 'url', 'content']
+    fieldsets =  (
+        (None,
+         {'fields': ('title', 'url', 'enabled', 'since',
+                     'advertiser', )}),
+        )
 
 class AdClickAdmin(admin.ModelAdmin):
     search_fields = ['ad', 'source_ip']
@@ -38,6 +41,9 @@ class AdImpressionAdmin(admin.ModelAdmin):
     list_display = ['ad', 'impression_date', 'source_ip']
     list_filter = ['impression_date']
     date_hierarchy = 'impression_date'
+
+class TextAdAdmin(AdBaseAdmin):
+    search_fields = ['title', 'url', 'content']
 
 admin.site.register(Advertiser, AdvertiserAdmin)
 admin.site.register(AdCategory, AdCategoryAdmin)
