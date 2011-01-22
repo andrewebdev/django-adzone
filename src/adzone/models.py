@@ -7,6 +7,7 @@
 
 from datetime import datetime
 
+from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
@@ -14,66 +15,71 @@ from django.utils.translation import ugettext_lazy as _
 from adzone.managers import AdManager
 
 class Advertiser(models.Model):
-    """ A Model for our Advertiser
     """
-    company_name = models.CharField(_("Company name"), max_length=255)
-    website = models.URLField(_("Website"), verify_exists=True)
-    user = models.ForeignKey(User, verbose_name=_("User"))
+    A Model for our Advertiser.
+    """
+    company_name = models.CharField(
+        verbose_name=_(u'Company Name'), max_length=255)
+    website = models.URLField(
+        verbose_name=_(u'Company Site'), verify_exists=(settings.DEBUG==False))
+    user = models.ForeignKey(User)
 
     class Meta:
-        verbose_name = _('Advertiser')
-        verbose_name_plural = _('Advertisers')
+        verbose_name = _(u'Advertiser')
+        verbose_name_plural = _(u'Advertisers')
+        ordering = ('company_name',)
 
     def __unicode__(self):
-        return "%s" % self.company_name
+        return self.company_name
 
     def get_website_url(self):
-        return "%s" % self.website
+        return self.website
 
 class AdCategory(models.Model):
     """
     a Model to hold the different Categories for adverts
-
     """
-    title = models.CharField(_("Title"), max_length=255)
-    slug = models.SlugField(_("Slug"), unique=True)
-    description = models.TextField(_("Description"))
+    title = models.CharField(verbose_name=_(u'Title'), max_length=255)
+    slug = models.SlugField(verbose_name=_(u'Slug'), unique=True)
+    description = models.TextField(verbose_name=_(u'Description'))
 
     class Meta:
-        verbose_name = _('Ad Category')
-        verbose_name_plural = _('Ad Categories')
+        verbose_name = 'Category'
+        verbose_name_plural = 'Categories'
+        ordering = ('title',)
 
     def __unicode__(self):
-        return "%s" % self.title
+        return self.title
 
 class AdZone(models.Model):
     """
     a Model that describes the attributes and behaviours of ad zones
-
     """
-    title = models.CharField(_("Title"), max_length=255)
-    slug = models.SlugField(_("Slug"))
-    description = models.TextField(_("Description"))
+    title = models.CharField(verbose_name=_(u'Title'), max_length=255)
+    slug = models.SlugField(verbose_name=_(u'Slug'))
+    description = models.TextField(verbose_name=_(u'Description'))
 
     class Meta:
-        verbose_name = _('Ad Zone')
-        verbose_name_plural = _('Ad Zones')
+        verbose_name = 'Zone'
+        verbose_name_plural = 'Zones'
+        ordering = ('title',)
 
     def __unicode__(self):
-        return "%s" % self.title
+        return self.title
 
 class AdBase(models.Model):
     """
     This is our base model, from which all ads will inherit.
     The manager methods for this model will determine which ads to
     display return etc.
-
     """
-    title = models.CharField(_("Title"), max_length=255)
-    url = models.URLField(_("URL"), verify_exists=True)
-    enabled = models.BooleanField(_("Enabled"), default=False)
-    since = models.DateTimeField(_("Since"), default=datetime.now)
-    updated = models.DateTimeField(_("Updated"), editable=False)
+    title = models.CharField(verbose_name=_(u'Title'), max_length=255)
+    url = models.URLField(verbose_name=_(u'Advertised URL'),
+                          verify_exists=(settings.DEBUG==False))
+    enabled = models.BooleanField(verbose_name=_(u'Enabled'), default=False)
+    since = models.DateTimeField(
+        verbose_name=_(u'Since'), default=datetime.now)
+    updated = models.DateTimeField(verbose_name=_(u'Updated'), editable=False)
 
     # Relations
     advertiser = models.ForeignKey(Advertiser, verbose_name=_("Advertiser"))
@@ -88,7 +94,7 @@ class AdBase(models.Model):
         verbose_name_plural = _('Ad Bases')
 
     def __unicode__(self):
-        return "%s" % self.title
+        return self.title
 
     @models.permalink
     def get_absolute_url(self):
@@ -101,11 +107,12 @@ class AdBase(models.Model):
 class AdImpression(models.Model):
     """
     The AdImpression Model will record every time the ad is loaded on a page
-
     """
-    impression_date = models.DateTimeField(_("Impression date"), default=datetime.now)
-    source_ip = models.IPAddressField(_("Source IP"), null=True, blank=True)
-    ad = models.ForeignKey(AdBase, verbose_name=_("Ad"))
+    impression_date = models.DateTimeField(
+        verbose_name=_(u'When'), default=datetime.now)
+    source_ip = models.IPAddressField(
+        verbose_name=_(u'Who'), null=True, blank=True)
+    ad = models.ForeignKey(AdBase)
 
     class Meta:
         verbose_name = _('Ad Impression')
@@ -114,11 +121,12 @@ class AdImpression(models.Model):
 class AdClick(models.Model):
     """
     The AdClick model will record every click that a add gets
-
     """
-    click_date = models.DateTimeField(_("Click date"), default=datetime.now)
-    source_ip = models.IPAddressField(_("Source IP"), null=True, blank=True)
-    ad = models.ForeignKey(AdBase, verbose_name=_("Ad"))
+    click_date = models.DateTimeField(
+        verbose_name=_(u'When'), default=datetime.now)
+    source_ip = models.IPAddressField(
+        verbose_name=_(u'Who'), null=True, blank=True)
+    ad = models.ForeignKey(AdBase)
 
     class Meta:
         verbose_name = _('Ad Click')
@@ -127,17 +135,9 @@ class AdClick(models.Model):
 # Example Ad Types
 class TextAd(AdBase):
     """ A most basic, text based advert """
-    content = models.TextField(_("Content"))
-
-    class Meta:
-        verbose_name = _('Text ad')
-        verbose_name_plural = _('Texts ads')
+    content = models.TextField(verbose_name=_(u'Content'))
 
 class BannerAd(AdBase):
     """ A standard banner Ad """
-    content = models.ImageField(_("Banner"), upload_to="adzone/bannerads/")
-
-    class Meta:
-        verbose_name = _('Banner ad')
-        verbose_name_plural = _('Banners ads')
-
+    content = models.ImageField(
+        verbose_name=_(u'Content'), upload_to="adzone/bannerads/")
