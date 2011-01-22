@@ -24,12 +24,6 @@ class AdBaseAdmin(admin.ModelAdmin):
     list_filter = ['updated', 'enabled', 'since', 'updated']
     search_fields = ['title', 'url']
 
-    fieldsets =  (
-        (None,
-         {'fields': ('title', 'url', 'enabled', 'since',
-                     'advertiser', )}),
-        )
-
 class AdClickAdmin(admin.ModelAdmin):
     search_fields = ['ad', 'source_ip']
     list_display = ['ad', 'click_date', 'source_ip']
