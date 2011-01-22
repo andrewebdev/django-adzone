@@ -25,7 +25,7 @@ class Advertiser(models.Model):
     user = models.ForeignKey(User)
 
     class Meta:
-        verbose_name = _(u'Advertiser')
+        verbose_name = _(u'Ad Provider')
         verbose_name_plural = _(u'Advertisers')
         ordering = ('company_name',)
 
@@ -82,7 +82,7 @@ class AdBase(models.Model):
     updated = models.DateTimeField(verbose_name=_(u'Updated'), editable=False)
 
     # Relations
-    advertiser = models.ForeignKey(Advertiser, verbose_name=_("Advertiser"))
+    advertiser = models.ForeignKey(Advertiser, verbose_name=_("Ad Provider"))
     category = models.ForeignKey(AdCategory, verbose_name=_("Category"))
     zone = models.ForeignKey(AdZone, verbose_name=_("Zone"))
 

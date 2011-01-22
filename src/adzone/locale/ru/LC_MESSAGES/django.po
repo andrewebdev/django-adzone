@@ -27,7 +27,7 @@ msgid "Company Site"
 msgstr "Сайт компании"
 
 #: models.py:27
-msgid "Advertiser"
+msgid "Ad Provider"
 msgstr "Рекламодатель"
 
 #: models.py:28

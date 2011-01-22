@@ -29,7 +29,7 @@ msgid "User"
 msgstr "Usuário"
 
 #: models.py:24 models.py:79
-msgid "Advertiser"
+msgid "Ad Provider"
 msgstr "Anunciante"
 
 #: models.py:25
