@@ -14,14 +14,12 @@ from django.utils.translation import ugettext_lazy as _
 
 from adzone.managers import AdManager
 
+
 class Advertiser(models.Model):
-    """
-    A Model for our Advertiser.
-    """
+    """ A Model for our Advertiser.  """
     company_name = models.CharField(
         verbose_name=_(u'Company Name'), max_length=255)
-    website = models.URLField(
-        verbose_name=_(u'Company Site'), verify_exists=(settings.DEBUG==False))
+    website = models.URLField(verbose_name=_(u'Company Site'))
     user = models.ForeignKey(User)
 
     class Meta:
@@ -35,10 +33,9 @@ class Advertiser(models.Model):
     def get_website_url(self):
         return self.website
 
+
 class AdCategory(models.Model):
-    """
-    a Model to hold the different Categories for adverts
-    """
+    """ a Model to hold the different Categories for adverts """
     title = models.CharField(verbose_name=_(u'Title'), max_length=255)
     slug = models.SlugField(verbose_name=_(u'Slug'), unique=True)
     description = models.TextField(verbose_name=_(u'Description'))
@@ -51,10 +48,9 @@ class AdCategory(models.Model):
     def __unicode__(self):
         return self.title
 
+
 class AdZone(models.Model):
-    """
-    a Model that describes the attributes and behaviours of ad zones
-    """
+    """ a Model that describes the attributes and behaviours of ad zones """
     title = models.CharField(verbose_name=_(u'Title'), max_length=255)
     slug = models.SlugField(verbose_name=_(u'Slug'))
     description = models.TextField(verbose_name=_(u'Description'))
@@ -67,6 +63,7 @@ class AdZone(models.Model):
     def __unicode__(self):
         return self.title
 
+
 class AdBase(models.Model):
     """
     This is our base model, from which all ads will inherit.
@@ -74,11 +71,9 @@ class AdBase(models.Model):
     display return etc.
     """
     title = models.CharField(verbose_name=_(u'Title'), max_length=255)
-    url = models.URLField(verbose_name=_(u'Advertised URL'),
-                          verify_exists=(settings.DEBUG==False))
+    url = models.URLField(verbose_name=_(u'Advertised URL'))
     enabled = models.BooleanField(verbose_name=_(u'Enabled'), default=False)
-    since = models.DateTimeField(
-        verbose_name=_(u'Since'), default=datetime.now)
+    since = models.DateTimeField(verbose_name=_(u'Since'), default=datetime.now)
     updated = models.DateTimeField(verbose_name=_(u'Updated'), editable=False)
 
     # Relations
@@ -104,6 +99,7 @@ class AdBase(models.Model):
         self.updated = datetime.now()
         super(AdBase, self).save(*args, **kwargs)
 
+
 class AdImpression(models.Model):
     """
     The AdImpression Model will record every time the ad is loaded on a page
@@ -117,6 +113,7 @@ class AdImpression(models.Model):
     class Meta:
         verbose_name = _('Ad Impression')
         verbose_name_plural = _('Ad Impressions')
+
 
 class AdClick(models.Model):
     """
@@ -132,10 +129,12 @@ class AdClick(models.Model):
         verbose_name = _('Ad Click')
         verbose_name_plural = _('Ad Clicks')
 
+
 # Example Ad Types
 class TextAd(AdBase):
     """ A most basic, text based advert """
     content = models.TextField(verbose_name=_(u'Content'))
+
 
 class BannerAd(AdBase):
     """ A standard banner Ad """
