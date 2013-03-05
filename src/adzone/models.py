@@ -12,11 +12,11 @@ from django.contrib.auth.models import User
 
 from adzone.managers import AdManager
 
+
 class Advertiser(models.Model):
-    """ A Model for our Advertiser
-    """
+    """ A Model for our Advertiser """
     company_name = models.CharField(max_length=255)
-    website = models.URLField(verify_exists=True)
+    website = models.URLField()
     user = models.ForeignKey(User)
 
     def __unicode__(self):
@@ -25,11 +25,9 @@ class Advertiser(models.Model):
     def get_website_url(self):
         return "%s" % self.website
 
-class AdCategory(models.Model):
-    """
-    a Model to hold the different Categories for adverts
 
-    """
+class AdCategory(models.Model):
+    """ a Model to hold the different Categories for adverts """
     title = models.CharField(max_length=255)
     slug = models.SlugField(unique=True)
     description = models.TextField()
@@ -41,11 +39,9 @@ class AdCategory(models.Model):
     def __unicode__(self):
         return "%s" % self.title
 
-class AdZone(models.Model):
-    """
-    a Model that describes the attributes and behaviours of ad zones
 
-    """
+class AdZone(models.Model):
+    """ a Model that describes the attributes and behaviours of ad zones """
     title = models.CharField(max_length=255)
     slug = models.SlugField()
     description = models.TextField()
@@ -57,6 +53,7 @@ class AdZone(models.Model):
     def __unicode__(self):
         return "%s" % self.title
 
+
 class AdBase(models.Model):
     """
     This is our base model, from which all ads will inherit.
@@ -65,7 +62,7 @@ class AdBase(models.Model):
 
     """
     title = models.CharField(max_length=255)
-    url = models.URLField(verify_exists=True)
+    url = models.URLField()
     enabled = models.BooleanField(default=False)
     since = models.DateTimeField(default=datetime.now)
     updated = models.DateTimeField(editable=False)
@@ -89,6 +86,7 @@ class AdBase(models.Model):
         self.updated = datetime.now()
         super(AdBase, self).save(*args, **kwargs)
 
+
 class AdImpression(models.Model):
     """
     The AdImpression Model will record every time the ad is loaded on a page
@@ -101,6 +99,7 @@ class AdImpression(models.Model):
     class Meta:
         verbose_name = 'Ad Impression'
         verbose_name_plural = 'Ad Impressions'
+
 
 class AdClick(models.Model):
     """
@@ -115,10 +114,12 @@ class AdClick(models.Model):
         verbose_name = 'Ad Click'
         verbose_name_plural = 'Ad Clicks'
 
+
 # Example Ad Types
 class TextAd(AdBase):
     """ A most basic, text based advert """
     content = models.TextField()
+
 
 class BannerAd(AdBase):
     """ A standard banner Ad """

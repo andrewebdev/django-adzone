@@ -1,3 +1,6 @@
 *.pyc
 *~
 *.db
+*.swp
+venv
+demo
