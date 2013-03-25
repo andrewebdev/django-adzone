@@ -12,12 +12,11 @@ from django.http import HttpResponseRedirect
 
 from adzone.models import AdBase, AdClick
 
-def ad_view(request, id):
-    """
-    Record the click in the database, then redirect to ad url
 
-    """
+def ad_view(request, id):
+    """ Record the click in the database, then redirect to ad url """
     ad = get_object_or_404(AdBase, id=id)
+
     try:
         click = AdClick(
             ad=ad,
@@ -26,5 +25,8 @@ def ad_view(request, id):
         )
         click.save()
     except:
+        # FIXME: Probably shouldn't pass silently here. Dont remember why I
+        # did this.
         pass
+
     return HttpResponseRedirect(ad.url)

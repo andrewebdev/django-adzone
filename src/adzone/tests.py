@@ -2,12 +2,14 @@ from datetime import datetime
 
 from django.test import TestCase
 # from django.test.client import RequestFactory
-# from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 
 from adzone.models import Advertiser, AdCategory, AdZone, AdBase
+from adzone.models import AdImpression, AdClick
+from adzone.managers import AdManager
 
 
+# Helper functions to help setting up the tests
 user = lambda: User.objects.create_user('test', 'test@example.com', 'secret')
 
 
@@ -16,6 +18,7 @@ def datenow():
 
 
 def create_objects():
+    """ Simple helper to create advertiser, category and zone """
     advertiser = Advertiser.objects.create(
         company_name='Advertiser Name 1',
         website='http://example.com/', user=user())
@@ -32,51 +35,21 @@ def create_objects():
 
     return advertiser, category, adzone
 
-    # ad = TextAd.objects.create(
-    #     title='First Ad',
-    #     content='For all your web design and development needs, at competitive rates.',
-    #     url='http://www.teh-node.co.za/',
-    #     enabled=True,
-    #     advertiser=self.advertiser,
-    #     category=self.category,
-    #     zone=self.adzone)
 
-    # ad2 = TextAd.objects.create(
-    #     title='Second Ad',
-    #     content='A second advert.',
-    #     url='http://www.teh-node.co.za/',
-    #     enabled=True,
-    #     advertiser=self.advertiser,
-    #     category=self.category2,
-    #     zone=self.adzone2)
-
-    # ad3 = TextAd.objects.create(
-    #     title='A Third Ad',
-    #     content='A third advert.',
-    #     url='http://www.teh-node.co.za/',
-    #     enabled=True,
-    #     advertiser=self.advertiser,
-    #     category=self.category2,
-    #     zone=self.adzone2)
-
-    # # AdImpression Setup
-    # impression1 = AdImpression.objects.create(
-    #     impression_date=datenow(),
-    #     source_ip='127.0.0.2',
-    #     ad=self.ad)
-
-    # impression2 = AdImpression.objects.create(
-    #     impression_date=datenow(),
-    #     source_ip='127.0.0.3',
-    #     ad=self.ad2)
-
-    # # Clicks Setup
-    # adclick1 = AdClick.objects.create(
-    #     click_date=datenow(),
-    #     source_ip='127.0.0.1',
-    #     ad=self.ad)
+def create_advert():
+    """ Simple helper to create a single ad """
+    advertiser, category, zone = create_objects()
+    ad = AdBase.objects.create(
+        title='Ad Title',
+        url='www.example.com',
+        advertiser=advertiser,
+        category=category,
+        zone=zone,
+    )
+    return ad
 
 
+# Now follows the actual tests
 class AdvertiserTestCase(TestCase):
 
     def test_model(self):
@@ -116,6 +89,8 @@ class AdZoneTestCase(TestCase):
 
 class AdBaseTestCase(TestCase):
 
+    urls = 'adzone.urls'
+
     def test_model(self):
         advertiser, category, zone = create_objects()
         AdBase(
@@ -126,57 +101,62 @@ class AdBaseTestCase(TestCase):
             zone=zone
         )
 
+    def test_unicode(self):
+        advert = create_advert()
+        self.assertEqual('Ad Title', str(advert))
 
-# class AdvertTestCase(AdvertisingTestCase):
-#     def testAd(self):
-#         self.assertEquals(reverse(
-#             'adzone_ad_view',
-#             args=['1']
-#         )[-8:], '/view/1/')
-#         adimpressions = AdImpression.objects.filter(ad=self.ad)
-#         self.assertEquals(len(adimpressions), 1)
-#         self.assertEquals(adimpressions[0].source_ip, '127.0.0.2')
-#
-#     def testAdAdvertiser(self):
-#         self.assertEquals(self.ad.advertiser.__unicode__(), 'teh_node Web Development')
-#         self.assertEquals(self.ad.advertiser.company_name, 'teh_node Web Development')
-#
-#     def testAddsInCategory(self):
-#         ads = TextAd.objects.filter(category__slug='internet-services')
-#         self.assertEquals(len(ads), 1)
-#         self.assertEquals(ads[0].title, 'First Ad')
-#
-#     def testRandomAd(self):
-#         ad = AdBase.objects.get_random_ad(
-#             ad_category='internet-services',
-#             ad_zone='sidebar'
-#         )
-#         self.assertEquals(ad.title, 'First Ad')
-#
-#
-# class ImpressionTestCase(AdvertisingTestCase):
-#     def testImpression(self):
-#         impressions = AdImpression.objects.all()
-#         self.assertEquals(len(impressions), 2)
-#
-#
-# class ClickTestCase(AdvertisingTestCase):
-#
-#     def testClicks(self):
-#         clicks = AdClick.objects.all()
-#         self.assertEquals(len(clicks), 1)
-#
-#     def testClickOnAds(self):
-#         c = Client(REMOTE_ADDR='127.0.0.1')
-#         response = c.get(reverse(
-#             'adzone_ad_view',
-#             args=['1']
-#         ))
-#         self.assertEquals(len(AdClick.objects.all()), 2)
-#         click = AdClick.objects.all()[1]
-#         self.assertEquals(click.source_ip, '127.0.0.1')
-#
-#     def testInvalidAdURL(self):
-#         c = Client(REMOTE_ADDR='127.0.0.1')
-#         response = c.get('/te/10')
-#         self.assertEquals(len(AdClick.objects.all()), 1)
+    def test_absolute_url(self):
+        advert = create_advert()
+        self.assertEqual('/view/1/', advert.get_absolute_url())
+
+
+class AdManagerTestCase(TestCase):
+
+    def test_manager_exists(self):
+        AdManager
+
+    def test_get_random_ad(self):
+        self.assertTrue(False)
+
+    def test_get_random_ad_by_category(self):
+        self.assertTrue(False)
+
+
+class AdImpressionTestCase(TestCase):
+
+    def test_model(self):
+        advert = create_advert()
+        AdImpression(
+            impression_date=datenow(),
+            source_ip='127.0.0.1',
+            ad=advert,
+        )
+
+
+class AdClickTestCase(TestCase):
+
+    def test_model(self):
+        advert = create_advert()
+        AdClick(
+            click_date=datenow(),
+            source_ip='127.0.0.1',
+            ad=advert,
+        )
+
+
+class TemplateTagsTestCase(TestCase):
+
+    def test_random_zone_ad(self):
+        self.assertTrue(False)
+
+    def test_random_category_ad(self):
+        self.assertTrue(False)
+
+
+class AdViewTestCase(TestCase):
+
+    def test_request_creates_click(self):
+        self.assertTrue(False)
+
+    def test_response_redirects_to_ad_url(self):
+        self.assertTrue(False)

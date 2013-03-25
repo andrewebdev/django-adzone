@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class AdManager(models.Manager):
     """ A Custom Manager for ads """
 
@@ -8,13 +9,13 @@ class AdManager(models.Manager):
         Returns a random advert that belongs for the specified ``ad_category``
         and ``ad_zone``.
         If ``ad_category`` is None, the ad will be category independent.
-        
         """
         try:
             if ad_category:
                 ad = self.get_query_set().filter(
                     category__slug=ad_category,
-                    zone__slug=ad_zone).order_by('?')[0]
+                    zone__slug=ad_zone
+                ).order_by('?')[0]
             else:
                 ad = self.get_query_set().filter(
                     zone__slug=ad_zone).order_by('?')[0]
