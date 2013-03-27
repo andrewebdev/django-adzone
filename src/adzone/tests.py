@@ -1,12 +1,14 @@
 from datetime import datetime
 
 from django.test import TestCase
-# from django.test.client import RequestFactory
 from django.contrib.auth.models import User
+from django.template import Template
+from django.template.response import SimpleTemplateResponse
 
 from adzone.models import Advertiser, AdCategory, AdZone, AdBase
 from adzone.models import AdImpression, AdClick
 from adzone.managers import AdManager
+from adzone.templatetags.adzone_tags import random_zone_ad, random_category_ad
 
 
 # Helper functions to help setting up the tests
@@ -112,14 +114,40 @@ class AdBaseTestCase(TestCase):
 
 class AdManagerTestCase(TestCase):
 
+    def setUp(self):
+        # Create two categories and two adverts
+        advertiser, category, zone = create_objects()
+        category2 = AdCategory.objects.create(
+            title='Category 2',
+            slug='category-2',
+            description='Category 2 description'
+        )
+        AdBase.objects.create(
+            title='Ad Title',
+            url='www.example.com',
+            advertiser=advertiser,
+            category=category,
+            zone=zone
+        )
+        AdBase.objects.create(
+            title='Ad 2 Title',
+            url='www.example2.com',
+            advertiser=advertiser,
+            category=category2,
+            zone=zone
+        )
+
     def test_manager_exists(self):
         AdManager
 
     def test_get_random_ad(self):
-        self.assertTrue(False)
+        advert = AdBase.objects.get_random_ad('sidebar')
+        self.assertIn(advert.id, [1, 2])
 
     def test_get_random_ad_by_category(self):
-        self.assertTrue(False)
+        advert = AdBase.objects.get_random_ad('sidebar',
+                                              ad_category='category-2')
+        self.assertIn(advert.id, [2])
 
 
 class AdImpressionTestCase(TestCase):
@@ -146,17 +174,46 @@ class AdClickTestCase(TestCase):
 
 class TemplateTagsTestCase(TestCase):
 
-    def test_random_zone_ad(self):
-        self.assertTrue(False)
+    def test_random_zone_ad_creates_impression(self):
+        create_advert()
+        random_zone_ad({'from_ip': '127.0.0.1'}, 'sidebar')
+        self.assertEqual(AdImpression.objects.all().count(), 1)
 
-    def test_random_category_ad(self):
-        self.assertTrue(False)
+    def test_random_zone_ad_renders(self):
+        template = Template("{% load adzone_tags %}{% random_zone_ad 'sidebar' %}")
+        response = SimpleTemplateResponse(template)
+        response.render()
+        self.assertTrue(response.is_rendered)
+
+    def test_random_category_ad_creates_impression(self):
+        create_advert()
+        random_category_ad(
+            {'from_ip': '127.0.0.1'}, 'sidebar', 'internet-services')
+        self.assertEqual(AdImpression.objects.all().count(), 1)
+
+    def test_random_category_ad_renders(self):
+        template = Template("{% load adzone_tags %}{% random_category_ad 'sidebar' 'internet-services' %}")
+        response = SimpleTemplateResponse(template)
+        response.render()
+        self.assertTrue(response.is_rendered)
 
 
 class AdViewTestCase(TestCase):
 
-    def test_request_creates_click(self):
-        self.assertTrue(False)
+    urls = 'adzone.urls'
 
-    def test_response_redirects_to_ad_url(self):
-        self.assertTrue(False)
+    def test_request_redirects(self):
+        create_advert()
+        response = self.client.get('/view/1/')
+        self.assertEqual(response.status_code, 302)
+
+    def test_request_redirect_chain(self):
+        create_advert()
+        response = self.client.get('/view/1/', follow=True)
+        chain = [('http://www.example.com', 302), ]
+        self.assertEqual(response.redirect_chain, chain)
+
+    def test_request_creates_click(self):
+        create_advert()
+        self.client.get('/view/1/')  # dont need response for this test
+        self.assertEqual(AdClick.objects.filter(ad__id=1).count(), 1)
