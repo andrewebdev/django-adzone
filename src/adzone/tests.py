@@ -1,9 +1,8 @@
-from datetime import datetime
-
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.template import Template
 from django.template.response import SimpleTemplateResponse
+from django.utils import timezone
 
 from adzone.models import Advertiser, AdCategory, AdZone, AdBase
 from adzone.models import AdImpression, AdClick
@@ -16,7 +15,7 @@ user = lambda: User.objects.create_user('test', 'test@example.com', 'secret')
 
 
 def datenow():
-    return datetime.now()
+    return timezone.now()
 
 
 def create_objects():

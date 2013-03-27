@@ -5,9 +5,6 @@
 # Please see the text file LICENCE for more information
 # If this script is distributed, it must be accompanied by the Licence
 
-from datetime import datetime
-
-from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
@@ -73,8 +70,8 @@ class AdBase(models.Model):
     title = models.CharField(verbose_name=_(u'Title'), max_length=255)
     url = models.URLField(verbose_name=_(u'Advertised URL'))
     enabled = models.BooleanField(verbose_name=_(u'Enabled'), default=False)
-    since = models.DateTimeField(verbose_name=_(u'Since'), default=datetime.now)
-    updated = models.DateTimeField(verbose_name=_(u'Updated'), editable=False)
+    since = models.DateTimeField(verbose_name=_(u'Since'), auto_now_add=True)
+    updated = models.DateTimeField(verbose_name=_(u'Updated'), auto_now=True)
 
     # Relations
     advertiser = models.ForeignKey(Advertiser, verbose_name=_("Ad Provider"))
@@ -95,17 +92,13 @@ class AdBase(models.Model):
     def get_absolute_url(self):
         return ('adzone_ad_view', [self.id])
 
-    def save(self, *args, **kwargs):
-        self.updated = datetime.now()
-        super(AdBase, self).save(*args, **kwargs)
-
 
 class AdImpression(models.Model):
     """
     The AdImpression Model will record every time the ad is loaded on a page
     """
     impression_date = models.DateTimeField(
-        verbose_name=_(u'When'), default=datetime.now)
+        verbose_name=_(u'When'), auto_now_add=True)
     source_ip = models.IPAddressField(
         verbose_name=_(u'Who'), null=True, blank=True)
     ad = models.ForeignKey(AdBase)
@@ -120,7 +113,7 @@ class AdClick(models.Model):
     The AdClick model will record every click that a add gets
     """
     click_date = models.DateTimeField(
-        verbose_name=_(u'When'), default=datetime.now)
+        verbose_name=_(u'When'), auto_now_add=True)
     source_ip = models.IPAddressField(
         verbose_name=_(u'Who'), null=True, blank=True)
     ad = models.ForeignKey(AdBase)

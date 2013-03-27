@@ -8,21 +8,26 @@
 from django.contrib import admin
 from adzone.models import *
 
+
 class AdvertiserAdmin(admin.ModelAdmin):
     search_fields = ['company_name', 'website']
     list_display = ['company_name', 'website', 'user']
+
 
 class AdCategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ['title']}
     list_display = ['title', 'slug']
 
+
 class AdZoneAdmin(admin.ModelAdmin):
     list_display = ['title', 'slug', 'description']
+
 
 class AdBaseAdmin(admin.ModelAdmin):
     list_display = ['title', 'url', 'advertiser', 'since', 'updated', 'enabled']
     list_filter = ['updated', 'enabled', 'since', 'updated']
     search_fields = ['title', 'url']
+
 
 class AdClickAdmin(admin.ModelAdmin):
     search_fields = ['ad', 'source_ip']
@@ -30,14 +35,17 @@ class AdClickAdmin(admin.ModelAdmin):
     list_filter = ['click_date']
     date_hierarchy = 'click_date'
 
+
 class AdImpressionAdmin(admin.ModelAdmin):
     search_fields = ['ad', 'source_ip']
     list_display = ['ad', 'impression_date', 'source_ip']
     list_filter = ['impression_date']
     date_hierarchy = 'impression_date'
 
+
 class TextAdAdmin(AdBaseAdmin):
     search_fields = ['title', 'url', 'content']
+
 
 admin.site.register(Advertiser, AdvertiserAdmin)
 admin.site.register(AdCategory, AdCategoryAdmin)
