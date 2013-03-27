@@ -1,6 +1,6 @@
 h1. django-adzone Documentation
 
-© Copyright 2009 Andre Engelbrecht. All Rights Reserved.
+© Copyright 2013 Andre Engelbrecht. All Rights Reserved.
 
 h2. License
 
@@ -8,9 +8,11 @@ Please see the LICENCE file for information on the License
 
 h2. Disclaimer
 
-Please take note: django-adzone has just gone through a major update. If you have been using the previous version of django-adzone, then you should not upgrade since you are highly likely to break something. You have been warned :)
+Please take note: django-adzone has just gone through a major update. If you
+have been using the previous version of django-adzone, then you should not
+upgrade since you are highly likely to break something. You have been warned :)
 
-*0.2a* is a alpha release. Please test and report any bugs that you may find.
+*0.2b* is a alpha release. Please test and report any bugs that you may find.
 
 h2. Release Notes
 
@@ -24,29 +26,36 @@ h2. Release Notes
 
 h2. Concept behind adzone
 
-The concept behind adzone is quite simple. You have certain areas on your website reserved for adverts. The size and
-nature of the ads may differ for each of these areas. Adzone allows exactly this kind of functionality, by choosing
-which adds belong to certain zones.
+The concept behind adzone is quite simple. You have certain areas on your
+website reserved for adverts. The size and nature of the ads may differ for
+each of these areas. Adzone allows exactly this kind of functionality, by
+choosing which adds belong to certain zones.
 
 Ads are grouped according to 2 criteria
 
 h3. 1.The Category
 
-The ad category explains the nature or subject matter for the advert. This can help to specify in which pages of your
-site you want a specific group of ads to appear. For example, you have a bunch of ads related to your blog, so you add
-them to your Blog category.
+The ad category explains the nature or subject matter for the advert.
+This can help to specify in which pages of your site you want a specific group
+of ads to appear. For example, you have a bunch of ads related to your blog,
+so you add them to your Blog category.
 
 h3. 2.The Zone
 
-Zone specifies what area on the current page the ad belongs to. If you are displaying a ad on your blog you might have 2
-zones, one for content, and one for the right column.
+Zone specifies what area on the current page the ad belongs to. If you are
+displaying a ad on your blog you might have 2 zones, one for content, and one
+for the right column.
 
-These two grouping criteria provides enough flexability to control what ads will display where. All you need to do is to
-use the adzone template tags, to specify categories and zones in your templates.
+These two grouping criteria provides enough flexability to control what ads
+will display where. All you need to do is to use the adzone template tags, to
+specify categories and zones in your templates.
 
-h2. Requirements
+h2. Note on Adblock plugins for browsers.
 
-There are no external requirements for this project.
+If you have any adblock plugins installed in your browser, it may be best to
+either disable them or add your site admin to the whitelist. If you dont,
+there is a risk that certain fields may not show up when you want to edit
+anything.
 
 h2. Installing
 
@@ -54,8 +63,6 @@ Installation instructions may vary depending on your environment.
 To install system wide however, just run:
 
 @python setup.py install@
-
-Warning! Disable AdBlock plugin for your site! ABP hides field of Advertiser.
 
 h2. How to use
 
@@ -79,10 +86,8 @@ _ad zone_ slug: 'content'
 Now, in your template, you first want to load the tag library:
 @{% load adzone_tags %}@
 
-Next, ad the tag to the specific area where you want the ads to appear:
-@{% random_zone_ad 'general' 'content' %}@
+Averts are loaded through the use of two tags:
 
-The ads are first filtered by the _category_ and _zone_ slugs you pass to the tag, and then a random ad is returned.
+@{% random_zone_ad 'sidebar' %}@ - Loads a random advert for the sidebar zone
 
-*One Tag to rule them all!* No seriously, you only need the one tag to display any type of ad, textads or bannerads. This also applies if you decide to create your own types of ads (by extending the AdBase model).
-
+@{% random_category_ad 'sidebar' 'general' %}@ - Loads a random advert from the "general" category, for the sidebar zone.
