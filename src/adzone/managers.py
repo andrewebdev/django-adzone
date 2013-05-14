@@ -19,6 +19,7 @@ class AdManager(models.Manager):
                 ).order_by('?')[0]
             else:
                 ad = self.get_query_set().filter(
+                    enabled=True,
                     zone__slug=ad_zone).order_by('?')[0]
         except IndexError:
             return None
