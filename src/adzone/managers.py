@@ -13,6 +13,7 @@ class AdManager(models.Manager):
         try:
             if ad_category:
                 ad = self.get_query_set().filter(
+                    enabled=True,
                     category__slug=ad_category,
                     zone__slug=ad_zone
                 ).order_by('?')[0]
