@@ -5,6 +5,8 @@
 # Please see the text file LICENCE for more information
 # If this script is distributed, it must be accompanied by the Licence
 
+import datetime
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
@@ -69,9 +71,13 @@ class AdBase(models.Model):
     """
     title = models.CharField(verbose_name=_(u'Title'), max_length=255)
     url = models.URLField(verbose_name=_(u'Advertised URL'))
-    enabled = models.BooleanField(verbose_name=_(u'Enabled'), default=False)
     since = models.DateTimeField(verbose_name=_(u'Since'), auto_now_add=True)
     updated = models.DateTimeField(verbose_name=_(u'Updated'), auto_now=True)
+
+    start_showing = models.DateTimeField(verbose_name=_(u'Start showing'),
+                                         default=datetime.datetime.now)
+    stop_showing = models.DateTimeField(verbose_name=_(u'Stop showing'),
+                                        default=datetime.datetime.max)
 
     # Relations
     advertiser = models.ForeignKey(Advertiser, verbose_name=_("Ad Provider"))
