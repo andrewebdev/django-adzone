@@ -1,4 +1,10 @@
+import datetime
+
 from django.db import models
+try:
+    from django.utils.timezone import now
+except ImportError:
+    now = datetime.datetime.now
 
 
 class AdManager(models.Manager):
@@ -13,13 +19,15 @@ class AdManager(models.Manager):
         try:
             if ad_category:
                 ad = self.get_query_set().filter(
-                    enabled=True,
+                    start_showing__lte=now(),
+                    stop_showing__gte=now(),
                     category__slug=ad_category,
                     zone__slug=ad_zone
                 ).order_by('?')[0]
             else:
                 ad = self.get_query_set().filter(
-                    enabled=True,
+                    start_showing__lte=now(),
+                    stop_showing__gte=now(),
                     zone__slug=ad_zone).order_by('?')[0]
         except IndexError:
             return None
