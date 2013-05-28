@@ -4,7 +4,7 @@ from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
 try:
-    from django.utils.timezone import now, make_aware, get_current_timezone
+    from django.utils.timezone import now, make_aware, utc
 except ImportError:
     now = datetime.datetime.now
     make_aware = None
@@ -16,7 +16,7 @@ class Migration(SchemaMigration):
         if make_aware is None:
             max_dt = datetime.datetime.max
         else:
-            max_dt = make_aware(datetime.datetime.max, get_current_timezone())
+            max_dt = make_aware(datetime.datetime.max, utc)
         # Adding field 'AdBase.start_showing'
         db.add_column('adzone_adbase', 'start_showing',
                       self.gf('django.db.models.fields.DateTimeField')(default=now),

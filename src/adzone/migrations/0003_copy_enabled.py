@@ -4,7 +4,7 @@ from south.db import db
 from south.v2 import DataMigration
 from django.db import models
 try:
-    from django.utils.timezone import now, make_aware, get_current_timezone
+    from django.utils.timezone import now, make_aware, utc
 except ImportError:
     now = datetime.datetime.now
     make_aware = None
@@ -17,7 +17,7 @@ class Migration(DataMigration):
         if make_aware is None:
             max_dt = datetime.datetime.max
         else:
-            max_dt = make_aware(datetime.datetime.max, get_current_timezone())
+            max_dt = make_aware(datetime.datetime.max, utc)
 
         ads_enabled = AdBase.objects.filter(enabled=True)
         ads_enabled.update(start_showing=now(),
