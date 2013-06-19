@@ -13,6 +13,16 @@ from django.utils.translation import ugettext_lazy as _
 
 from adzone.managers import AdManager
 
+# Use a datetime a few days before the max to that timezone changes don't
+# cause an OverflowError.
+MAX_DATETIME = datetime.datetime.max - datetime.timedelta(days=2)
+try:
+    from django.utils.timezone import now, make_aware, utc
+except ImportError:
+    now = datetime.datetime.now
+else:
+    MAX_DATETIME = make_aware(MAX_DATETIME, utc)
+
 
 class Advertiser(models.Model):
     """ A Model for our Advertiser.  """
@@ -75,9 +85,9 @@ class AdBase(models.Model):
     updated = models.DateTimeField(verbose_name=_(u'Updated'), auto_now=True)
 
     start_showing = models.DateTimeField(verbose_name=_(u'Start showing'),
-                                         default=datetime.datetime.now)
+                                         default=now)
     stop_showing = models.DateTimeField(verbose_name=_(u'Stop showing'),
-                                        default=datetime.datetime.max)
+                                        default=MAX_DATETIME)
 
     # Relations
     advertiser = models.ForeignKey(Advertiser, verbose_name=_("Ad Provider"))

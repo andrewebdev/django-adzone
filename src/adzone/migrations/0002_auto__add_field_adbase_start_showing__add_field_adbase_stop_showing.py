@@ -3,20 +3,21 @@ import datetime
 from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
+
+# Use a datetime a few days before the max to that timezone changes don't
+# cause an OverflowError.
+MAX_DATETIME = datetime.datetime.max - datetime.timedelta(days=2)
 try:
     from django.utils.timezone import now, make_aware, utc
 except ImportError:
     now = datetime.datetime.now
-    make_aware = None
+else:
+    MAX_DATETIME = make_aware(MAX_DATETIME, utc)
 
 
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        if make_aware is None:
-            max_dt = datetime.datetime.max
-        else:
-            max_dt = make_aware(datetime.datetime.max, utc)
         # Adding field 'AdBase.start_showing'
         db.add_column('adzone_adbase', 'start_showing',
                       self.gf('django.db.models.fields.DateTimeField')(default=now),
@@ -24,7 +25,7 @@ class Migration(SchemaMigration):
 
         # Adding field 'AdBase.stop_showing'
         db.add_column('adzone_adbase', 'stop_showing',
-                      self.gf('django.db.models.fields.DateTimeField')(default=max_dt),
+                      self.gf('django.db.models.fields.DateTimeField')(default=MAX_DATETIME),
                       keep_default=False)
 
 
@@ -45,7 +46,7 @@ class Migration(SchemaMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'since': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'start_showing': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'stop_showing': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(9999, 12, 31, 0, 0)'}),
+            'stop_showing': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(9999, 12, 29, 0, 0)'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
             'url': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
