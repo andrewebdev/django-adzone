@@ -3,28 +3,21 @@ import datetime
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
+
 try:
-    from django.utils.timezone import now, make_aware, utc
+    from django.utils.timezone import now
 except ImportError:
     now = datetime.datetime.now
-    make_aware = None
 
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        "Write your forwards methods here."
+        # The AdBase objects currently *all* start showing at "now"-ish
+        # and stop showing at max_dt. So we just need to update the disabled
+        # ads to stop showing "now"-ish.
         AdBase = orm['adzone.adbase']
-        if make_aware is None:
-            max_dt = datetime.datetime.max
-        else:
-            max_dt = make_aware(datetime.datetime.max, utc)
-
-        ads_enabled = AdBase.objects.filter(enabled=True)
-        ads_enabled.update(start_showing=now(),
-                           stop_showing=max_dt)
         ads_disabled = AdBase.objects.filter(enabled=False)
-        ads_disabled.update(start_showing=now(),
-                            stop_showing=now())
+        ads_disabled.update(stop_showing=now())
 
     def backwards(self, orm):
         "Write your backwards methods here."
@@ -45,7 +38,7 @@ class Migration(DataMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'since': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'start_showing': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'stop_showing': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(9999, 12, 31, 0, 0)'}),
+            'stop_showing': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(9999, 12, 29, 0, 0)'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
             'url': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
