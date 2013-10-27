@@ -13,6 +13,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from adzone.managers import AdManager
 
+from django.contrib.sites.models import Site
+
 # Use a datetime a few days before the max to that timezone changes don't
 # cause an OverflowError.
 MAX_DATETIME = datetime.datetime.max - datetime.timedelta(days=2)
@@ -96,6 +98,8 @@ class AdBase(models.Model):
 
     # Our Custom Manager
     objects = AdManager()
+
+    sites = models.ManyToManyField(Site, verbose_name=(u"Sites"))
 
     class Meta:
         verbose_name = _('Ad Base')
