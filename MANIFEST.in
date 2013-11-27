@@ -1,0 +1,5 @@
+include setup.py MANIFEST.in LICENSE
+recursive-include src/adzone/templates *
+recursive-include src/adzone/locale *
+recursive-include src/adzone/migrations *
+global-exclude *~
