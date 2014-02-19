@@ -5,7 +5,10 @@
 # Please see the text file LICENCE for more information
 # If this script is distributed, it must be accompanied by the Licence
 
+import csv
+
 from django.contrib import admin
+from django.http import HttpResponse
 from adzone.models import *
 
 
@@ -43,6 +46,30 @@ class AdImpressionAdmin(admin.ModelAdmin):
     list_display = ['ad', 'impression_date', 'source_ip']
     list_filter = ['impression_date']
     date_hierarchy = 'impression_date'
+    actions = ['download_impressions']
+
+    def download_impressions(self, request, queryset):
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="impressions.csv"'
+        writer = csv.writer(response)
+        writer.writerow(('Title',
+                         'Advertised URL',
+                         'Source IP',
+                         'Timestamp',
+                         'Advertiser ID',
+                         'Advertiser name',
+                         'Zone'))
+        queryset = queryset.select_related('ad', 'ad__advertiser')
+        for impression in queryset:
+            writer.writerow((impression.ad.title,
+                             impression.ad.url,
+                             impression.source_ip,
+                             impression.impression_date.isoformat(),
+                             impression.ad.advertiser.pk,
+                             impression.ad.advertiser.company_name,
+                             impression.ad.zone.title))
+        return response
+    download_impressions.short_description = "Download selected Ad Impressions"
 
 
 class TextAdAdmin(AdBaseAdmin):
