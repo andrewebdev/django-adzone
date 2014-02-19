@@ -1,5 +1,7 @@
 import datetime
 
+from django.contrib.sites.models import Site
+
 from django.db import models
 try:
     from django.utils.timezone import now
@@ -18,7 +20,8 @@ class AdManager(models.Manager):
         """
         qs = self.get_query_set().filter(start_showing__lte=now(),
                                          stop_showing__gte=now(),
-                                         zone__slug=ad_zone
+                                         zone__slug=ad_zone,
+                                         sites=Site.objects.get_current().pk
                                          ).select_related('textad',
                                                           'bannerad')
         if ad_category:
