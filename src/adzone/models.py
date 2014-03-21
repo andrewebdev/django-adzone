@@ -93,7 +93,10 @@ class AdBase(models.Model):
 
     # Relations
     advertiser = models.ForeignKey(Advertiser, verbose_name=_("Ad Provider"))
-    category = models.ForeignKey(AdCategory, verbose_name=_("Category"))
+    category = models.ForeignKey(AdCategory,
+                                 verbose_name=_("Category"),
+                                 blank=True,
+                                 null=True)
     zone = models.ForeignKey(AdZone, verbose_name=_("Zone"))
 
     # Our Custom Manager
