@@ -40,6 +40,12 @@ class AdClickAdmin(admin.ModelAdmin):
     list_filter = ['click_date']
     date_hierarchy = 'click_date'
 
+    def queryset(self, request):
+        qs = super(AdClickAdmin, self).queryset(request)
+        return qs.select_related('ad').only('ad__title',
+                                            'click_date',
+                                            'source_ip')
+
 
 class AdImpressionAdmin(admin.ModelAdmin):
     search_fields = ['ad', 'source_ip']
@@ -47,6 +53,12 @@ class AdImpressionAdmin(admin.ModelAdmin):
     list_filter = ['impression_date']
     date_hierarchy = 'impression_date'
     actions = ['download_impressions']
+
+    def queryset(self, request):
+        qs = super(AdImpressionAdmin, self).queryset(request)
+        return qs.select_related('ad').only('ad__title',
+                                            'impression_date',
+                                            'source_ip')
 
     def download_impressions(self, request, queryset):
         response = HttpResponse(content_type='text/csv')
