@@ -9,7 +9,7 @@ setup(
     packages=find_packages('src'),
     package_dir={'': 'src'},
     install_requires=[
-        'setuptools',
+        'django>=1.4',
     ],
     include_package_data=True,
 )
