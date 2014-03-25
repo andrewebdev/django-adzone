@@ -39,6 +39,30 @@ class AdClickAdmin(admin.ModelAdmin):
     list_display = ['ad', 'click_date', 'source_ip']
     list_filter = ['click_date']
     date_hierarchy = 'click_date'
+    actions = ['download_clicks']
+
+    def download_clicks(self, request, queryset):
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="clicks.csv"'
+        writer = csv.writer(response)
+        writer.writerow(('Title',
+                         'Advertised URL',
+                         'Source IP',
+                         'Timestamp',
+                         'Advertiser ID',
+                         'Advertiser name',
+                         'Zone'))
+        queryset = queryset.select_related('ad', 'ad__advertiser')
+        for impression in queryset:
+            writer.writerow((impression.ad.title,
+                             impression.ad.url,
+                             impression.source_ip,
+                             impression.click_date.isoformat(),
+                             impression.ad.advertiser.pk,
+                             impression.ad.advertiser.company_name,
+                             impression.ad.zone.title))
+        return response
+    download_clicks.short_description = "Download selected Ad Clicks"
 
 
 class AdImpressionAdmin(admin.ModelAdmin):
