@@ -6,8 +6,7 @@ setup(
     url="http://github.com/winterweaver/django-adzone",
     description="A django app to manage adverts according to zones on a website.",
     author="Andre Engelbrecht",
-    packages=find_packages('src'),
-    package_dir={'': 'src'},
+    packages=find_packages(),
     install_requires=[
         'django>=1.4',
     ],
