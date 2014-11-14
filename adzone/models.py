@@ -8,7 +8,7 @@
 import datetime
 
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
 
 from adzone.managers import AdManager
@@ -31,7 +31,7 @@ class Advertiser(models.Model):
     company_name = models.CharField(
         verbose_name=_(u'Company Name'), max_length=255)
     website = models.URLField(verbose_name=_(u'Company Site'))
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(get_user_model())
 
     class Meta:
         verbose_name = _(u'Ad Provider')
