@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
 from django.template import Template
 from django.template.response import SimpleTemplateResponse
 from django.utils import timezone
@@ -47,6 +48,7 @@ def create_advert():
         category=category,
         zone=zone,
     )
+    ad.sites = [Site.objects.get_current()]
     return ad
 
 
@@ -121,20 +123,22 @@ class AdManagerTestCase(TestCase):
             slug='category-2',
             description='Category 2 description'
         )
-        AdBase.objects.create(
+        ad1 = AdBase.objects.create(
             title='Ad Title',
             url='www.example.com',
             advertiser=advertiser,
             category=category,
             zone=zone
         )
-        AdBase.objects.create(
+        ad2 = AdBase.objects.create(
             title='Ad 2 Title',
             url='www.example2.com',
             advertiser=advertiser,
             category=category2,
             zone=zone
         )
+        ad1.sites = [Site.objects.get_current()]
+        ad2.sites = [Site.objects.get_current()]
 
     def test_manager_exists(self):
         AdManager
