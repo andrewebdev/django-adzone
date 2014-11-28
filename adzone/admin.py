@@ -64,8 +64,8 @@ class AdClickAdmin(admin.ModelAdmin):
         return response
     download_clicks.short_description = "Download selected Ad Clicks"
 
-    def queryset(self, request):
-        qs = super(AdClickAdmin, self).queryset(request)
+    def get_queryset(self, request):
+        qs = super(AdClickAdmin, self).get_queryset(request)
         return qs.select_related('ad').only('ad__title',
                                             'click_date',
                                             'source_ip')
@@ -78,8 +78,8 @@ class AdImpressionAdmin(admin.ModelAdmin):
     date_hierarchy = 'impression_date'
     actions = ['download_impressions']
 
-    def queryset(self, request):
-        qs = super(AdImpressionAdmin, self).queryset(request)
+    def get_queryset(self, request):
+        qs = super(AdImpressionAdmin, self).get_queryset(request)
         return qs.select_related('ad').only('ad__title',
                                             'impression_date',
                                             'source_ip')

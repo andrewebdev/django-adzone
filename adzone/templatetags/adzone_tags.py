@@ -35,7 +35,7 @@ def random_zone_ad(context, ad_zone):
     to_return['ad'] = ad
 
     # Record a impression for the ad
-    if context.has_key('from_ip') and ad:
+    if 'from_ip' in context and ad:
         from_ip = context.get('from_ip')
         try:
             impression = AdImpression(
@@ -63,7 +63,7 @@ def random_category_ad(context, ad_zone, ad_category):
     to_return['ad'] = ad
 
     # Record a impression for the ad
-    if context.has_key('from_ip') and ad:
+    if 'from_ip' in context and ad:
         from_ip = context.get('from_ip')
         try:
             impression = AdImpression(

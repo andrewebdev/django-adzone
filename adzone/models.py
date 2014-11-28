@@ -8,7 +8,7 @@
 import datetime
 
 from django.db import models
-from django.contrib.auth import get_user_model
+from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
 from adzone.managers import AdManager
@@ -31,14 +31,14 @@ class Advertiser(models.Model):
     company_name = models.CharField(
         verbose_name=_(u'Company Name'), max_length=255)
     website = models.URLField(verbose_name=_(u'Company Site'))
-    user = models.ForeignKey(get_user_model())
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
 
     class Meta:
         verbose_name = _(u'Ad Provider')
         verbose_name_plural = _(u'Advertisers')
         ordering = ('company_name',)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.company_name
 
     def get_website_url(self):
@@ -56,7 +56,7 @@ class AdCategory(models.Model):
         verbose_name_plural = 'Categories'
         ordering = ('title',)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
 
@@ -71,7 +71,7 @@ class AdZone(models.Model):
         verbose_name_plural = 'Zones'
         ordering = ('title',)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
 
@@ -108,7 +108,7 @@ class AdBase(models.Model):
         verbose_name = _('Ad Base')
         verbose_name_plural = _('Ad Bases')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     @models.permalink
