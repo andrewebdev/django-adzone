@@ -1,0 +1,154 @@
+# django-adzone Translation.
+#
+# Copyright (C) 2017,
+# This file is distributed under the same license as the django-adzone package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: v0.2b\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-10-26 02:14-0200\n"
+"PO-Revision-Date: 2017-10-26 02:09-0200\n"
+"Last-Translator: Jacques de Villiers <jacquesdev@gmail.com>\n"
+"Language-Team: Afrikaans <jacquesdev@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1;\n"
+
+#: models.py:19
+msgid "Company name"
+msgstr "Maatskappy naam"
+
+#: models.py:20
+msgid "Website"
+msgstr "Webwerf"
+
+#: models.py:21
+msgid "User"
+msgstr "Gebruiker"
+
+#: models.py:24 models.py:79
+msgid "Ad Provider"
+msgstr "Adverteerder"
+
+#: models.py:25
+msgid "Advertisers"
+msgstr "Adverteerders"
+
+#: models.py:38 models.py:54 models.py:72
+msgid "Title"
+msgstr "Titel"
+
+#: models.py:39 models.py:55
+msgid "Slug"
+msgstr "Slug"
+
+#: models.py:40 models.py:56
+msgid "Description"
+msgstr "Beskrywing"
+
+#: models.py:43
+msgid "Ad Category"
+msgstr "Advertensie kategorie"
+
+#: models.py:44
+msgid "Ad Categories"
+msgstr "Advertensie kategorieë"
+
+#: models.py:59
+msgid "Ad Zone"
+msgstr "Advertensie sone"
+
+#: models.py:60
+msgid "Ad Zones"
+msgstr "Advertensie sones"
+
+#: models.py:73
+msgid "URL"
+msgstr "URL"
+
+#: models.py:74
+msgid "Enabled"
+msgstr "Geaktiveer"
+
+#: models.py:75
+msgid "Since"
+msgstr "Sedert"
+
+#: models.py:76
+msgid "Updated"
+msgstr "Opgedateer"
+
+#: models.py:80
+msgid "Category"
+msgstr "Kategorie"
+
+#: models.py:81
+msgid "Zone"
+msgstr "Sone"
+
+#: models.py:87
+msgid "Ad Base"
+msgstr "Advertensie basis"
+
+#: models.py:88
+msgid "Ad Bases"
+msgstr "Advertensie basisse"
+
+#: models.py:106
+msgid "Impression date"
+msgstr "Indruk datum"
+
+#: models.py:107 models.py:120
+msgid "Source IP"
+msgstr "Bron IP"
+
+#: models.py:108 models.py:121
+msgid "Ad"
+msgstr "Advertensie"
+
+#: models.py:111
+msgid "Ad Impression"
+msgstr "Advertensie indruk"
+
+#: models.py:112
+msgid "Ad Impressions"
+msgstr "Advertensie indrukke"
+
+#: models.py:119
+msgid "Click date"
+msgstr "Klik datum"
+
+#: models.py:124
+msgid "Ad Click"
+msgstr "Advertensie klik"
+
+#: models.py:125
+msgid "Ad Clicks"
+msgstr "Advertensie klike"
+
+#: models.py:130
+msgid "Content"
+msgstr "Inhoud"
+
+#: models.py:133
+msgid "Text ad"
+msgstr "Teks advertensie"
+
+#: models.py:134
+msgid "Texts ads"
+msgstr "Teks advertensies"
+
+#: models.py:138
+msgid "Banner"
+msgstr "Banier"
+
+#: models.py:141
+msgid "Banner ad"
+msgstr "Banier advertensie"
+
+#: models.py:142
+msgid "Banners ads"
+msgstr "Banier advertensies"
+
