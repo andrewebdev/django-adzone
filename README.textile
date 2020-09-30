@@ -4,7 +4,7 @@ h1. django-adzone Documentation
 
 h2. License
 
-Please see the LICENCE file for information on the License
+Please see the LICENCE file for information on the License.
 
 h2. Disclaimer
 
@@ -17,7 +17,7 @@ upgrade since you are highly likely to break something. You have been warned :)
 h2. Release Notes
 
 * Many thanks to, *Rafael* for adding internationalization and pt_BR translation!
-* AdBase model is no longer abstract
+* AdBase model is no longer abstract.
 * Added a manager to the AdBase class which can be used to return specific ads
 * AdBase child models (ie. textad and bannerad) no longer needs a get_absolute_url method
 * Removed the FlashAd model. This will be used in a example on how to create your own ad types (coming soon)
@@ -68,7 +68,7 @@ h2. How to use
 
 h3. Getting Started
 
-1. Add @adzone@ to your installed apps
+1. Add @adzone@ to your installed apps.
 2. To make sure that the user IP is recorded on the impressions, add the following to your TEMPLATE_CONTEXT_PROCESSORS:
 @'adzone.context_processors.get_source_ip'@ (this is not a requirement for the app to work in general)
 3. Add the adzone urls to your project urls: @(r'^adzone/', include('adzone.urls')),@
